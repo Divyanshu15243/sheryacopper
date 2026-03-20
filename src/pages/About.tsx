@@ -4,7 +4,7 @@ import Footer from "@/components/layout/Footer";
 import PageHero from "@/components/layout/PageHero";
 import CTASection from "@/components/home/CTASection";
 import { Award, Globe, Factory, Calendar, Users, CheckCircle, Shield, Wrench, BarChart3 } from "lucide-react";
-import factoryImg from "@/assets/factory.jpg";
+import factoryImg from "@/assets/Factory.jpg";
 import certificate1 from "@/assets/shrey-certificate-1024x1024.png";
 import certificate2 from "@/assets/certificate2-1024x1024.png";
 

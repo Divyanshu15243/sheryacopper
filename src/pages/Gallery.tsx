@@ -14,7 +14,7 @@ import titaniumTubes from "@/assets/categories/titanium-tubes.jpg";
 import inconelTubes from "@/assets/categories/inconel-tubes.jpg";
 import lightningArrester from "@/assets/categories/lightning-arrester.jpg";
 import cathodeAnode from "@/assets/categories/cathode-anode-hanger.jpg";
-import factoryImg from "@/assets/factory.jpg";
+import factoryImg from "@/assets/Factory.jpg";
 import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
 import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
 import warehouse from "@/assets/infrastructure/warehouse.jpg";
