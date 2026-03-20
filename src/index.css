@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+
+    --primary: 27 52% 46%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 7%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 0% 17%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 27 52% 46%;
+
+    --radius: 0.375rem;
+
+    --copper: 27 52% 46%;
+    --copper-light: 27 60% 58%;
+    --copper-dark: 27 45% 35%;
+    --graphite: 0 0% 7%;
+    --steel: 0 0% 17%;
+    --steel-light: 0 0% 35%;
+    --surface: 0 0% 96%;
+
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --shadow-copper: 0 4px 30px -5px hsl(27 52% 46% / 0.25);
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.08);
+    --shadow-card-hover: 0 12px 40px -8px hsl(0 0% 0% / 0.15);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .copper-gradient {
+    background: linear-gradient(135deg, hsl(var(--copper-dark)), hsl(var(--copper)), hsl(var(--copper-light)));
+  }
+
+  .graphite-gradient {
+    background: linear-gradient(180deg, hsl(var(--graphite)), hsl(var(--steel)));
+  }
+
+  .copper-text-gradient {
+    background: linear-gradient(135deg, hsl(var(--copper-light)), hsl(var(--copper)), hsl(var(--copper-dark)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .copper-glow {
+    box-shadow: var(--shadow-copper);
+  }
+
+  .card-shadow {
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-shadow:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .copper-underline {
+    @apply relative;
+  }
+
+  .copper-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-0.5 bg-primary;
+    width: 60px;
+  }
+}
