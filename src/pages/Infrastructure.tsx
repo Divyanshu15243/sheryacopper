@@ -6,7 +6,7 @@ import { Factory, Shield, Wrench, Warehouse, Cpu, Users } from "lucide-react";
 import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
 import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
 import warehouseImg from "@/assets/infrastructure/warehouse.jpg";
-import factoryImg from "@/assets/factory.jpg";
+import factoryImg from "@/assets/Factory.jpg";
 
 const facilities = [
   { image: factoryFloor, title: "Manufacturing Floor", description: "State-of-the-art CNC machines and production lines for precision manufacturing of copper, brass, and alloy products." },
