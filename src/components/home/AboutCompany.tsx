@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Award, Globe, Factory, Calendar } from "lucide-react";
-import factoryImg from "@/assets/factory.jpg";
+import factoryImg from "@/assets/Factory.jpg";
 
 const stats = [
   { icon: Calendar, value: "50+", label: "Years Experience" },
