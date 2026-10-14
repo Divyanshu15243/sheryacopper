@@ -1,91 +1,129 @@
-import { motion } from "framer-motion";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Award, CheckCircle, Shield, Star } from "lucide-react";
+import SiteLayout from "@/components/layout/SiteLayout";
 import PageHero from "@/components/layout/PageHero";
-import { Award, Shield, Star, CheckCircle } from "lucide-react";
-import isoCertImg from "@/assets/awards/iso-certificate.jpg";
+import CTASection from "@/components/home/CTASection";
+import Reveal from "@/components/site/Reveal";
+import SectionHeader from "@/components/site/SectionHeader";
+import { company } from "@/data/company";
+import { usePageMeta } from "@/hooks/use-page-meta";
+import certificate from "@/assets/shrey-certificate-1024x1024.png";
 
 const awards = [
   {
-    title: "ISO 9001:2008 Certification",
-    description: "Certified quality management system ensuring consistent product quality and customer satisfaction across all manufacturing processes.",
+    title: `${company.certification.standard} Certification`,
+    description:
+      "Certified quality management system ensuring consistent product quality and customer satisfaction across all manufacturing processes.",
     icon: Shield,
-    year: "Certified",
+    status: "Certified",
   },
   {
     title: "IAF Accreditation",
-    description: "International Accreditation Forum recognition for meeting global standards in manufacturing and quality assurance.",
+    description:
+      "International Accreditation Forum recognition for meeting global standards in manufacturing and quality assurance.",
     icon: Award,
-    year: "Accredited",
+    status: "Accredited",
   },
   {
     title: "Excellence in Export",
-    description: "Recognized for outstanding contribution to export of copper and alloy products to 30+ countries worldwide.",
+    description:
+      "Recognized for outstanding contribution to export of copper and alloy products to 30+ countries worldwide.",
     icon: Star,
-    year: "Awarded",
+    status: "Awarded",
   },
   {
     title: "Quality Excellence Award",
     description: "Awarded for maintaining highest quality standards in copper, brass, and alloy product manufacturing.",
     icon: CheckCircle,
-    year: "Awarded",
+    status: "Awarded",
   },
 ];
 
 export default function Awards() {
+  const cert = company.certification;
+  usePageMeta(
+    "Awards & Certifications",
+    `Shreya Coppers is an ${cert.standard} certified manufacturer of copper and copper alloys, brass and cupro-nickel pipes, tubes, rods, sections and profiles.`,
+  );
+
   return (
-    <div className="min-h-screen">
-      <Header />
-      <PageHero title="Awards & Certifications" subtitle="Recognized for excellence in quality and manufacturing" />
+    <SiteLayout>
+      <PageHero
+        eyebrow="Quality Credentials"
+        title="Awards & Certifications"
+        subtitle="Recognized for excellence in quality and manufacturing"
+      />
 
-      <section className="section-padding bg-background">
-        <div className="container-wide">
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <img src={isoCertImg} alt="ISO Certification" className="rounded-lg w-full object-cover aspect-[4/3] card-shadow" />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="font-heading text-3xl font-bold mb-6">
-                Our <span className="copper-text-gradient">Certifications</span>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Shreya Coppers is an ISO 9001:2008 certified company. Our quality management systems are designed to ensure the highest standards in manufacturing copper, brass, titanium, and alloy products.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                We are committed to continuous improvement and adhere to international standards across all our manufacturing processes, from raw material procurement to final product delivery.
-              </p>
-            </motion.div>
-          </div>
+      <section className="section bg-white">
+        <div className="container-wide grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
+          <Reveal className="lg:col-span-5">
+            <figure className="corner-marks border border-line bg-paper p-6 sm:p-10 lg:sticky lg:top-[calc(var(--header-h)+32px)]">
+              <img
+                src={certificate}
+                alt={`Shreya Coppers ${cert.standard} ${cert.title}`}
+                width={1024}
+                height={1024}
+                className="mx-auto w-full max-w-md"
+              />
+              <figcaption className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-steel">
+                {cert.title} · {cert.standard}
+              </figcaption>
+            </figure>
+          </Reveal>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {awards.map((award, i) => (
-              <motion.div
-                key={award.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-surface p-8 rounded-lg card-shadow text-center group hover:bg-graphite transition-colors duration-300"
-              >
-                <award.icon className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <div className="text-xs font-heading uppercase tracking-wider text-primary mb-2">{award.year}</div>
-                <h3 className="font-heading text-lg font-semibold mb-3 group-hover:text-primary-foreground transition-colors">{award.title}</h3>
-                <p className="text-sm text-muted-foreground group-hover:text-primary-foreground/70 transition-colors">{award.description}</p>
-              </motion.div>
-            ))}
-          </div>
+          <Reveal delay={0.08} className="lg:col-span-7">
+            <p className="eyebrow mb-4">Our Certifications</p>
+            <h2 className="h-section text-balance">{cert.standard} certified quality management</h2>
+            <div className="prose-body mt-6 text-[16px]">
+              <p>
+                Shreya Coppers is an {cert.standard} certified company. Our quality management systems are designed to ensure
+                the highest standards in manufacturing copper, brass, titanium, and alloy products.
+              </p>
+              <p>
+                We are committed to continuous improvement and adhere to international standards across all our
+                manufacturing processes, from raw material procurement to final product delivery.
+              </p>
+            </div>
+
+            <dl className="mt-10 divide-y divide-line border-y border-line">
+              {[
+                { term: "Standard", detail: cert.standard },
+                { term: "Certificate", detail: cert.title },
+                { term: "Issued By", detail: cert.issuer },
+                { term: "Certified Scope", detail: cert.scope },
+              ].map((row) => (
+                <div key={row.term} className="grid gap-1 py-4 sm:grid-cols-[170px_1fr] sm:gap-6">
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-copper-dark sm:pt-1">{row.term}</dt>
+                  <dd className="text-[15px] font-medium leading-relaxed text-ink">{row.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
         </div>
       </section>
 
-      <Footer />
-    </div>
+      <section className="section bg-paper">
+        <div className="container-wide">
+          <SectionHeader eyebrow="Recognition" title="Awards & accreditations" />
+          <ol className="grid gap-px border border-line bg-line md:grid-cols-2">
+            {awards.map((award, i) => (
+              <Reveal as="li" key={award.title} delay={(i % 2) * 0.05} className="flex gap-6 bg-white p-7 sm:p-9">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-line text-copper-dark">
+                  <award.icon className="h-5 w-5" aria-hidden />
+                </span>
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-steel">
+                    {String(i + 1).padStart(2, "0")} · {award.status}
+                  </p>
+                  <h3 className="mt-2 text-xl font-bold">{award.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{award.description}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <CTASection />
+    </SiteLayout>
   );
 }

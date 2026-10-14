@@ -1,192 +1,238 @@
-import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Mail, Phone, Send } from "lucide-react";
+import SiteLayout from "@/components/layout/SiteLayout";
 import PageHero from "@/components/layout/PageHero";
 import CTASection from "@/components/home/CTASection";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Send } from "lucide-react";
-import { findProduct } from "@/data/products";
-import brassTubesImage from "@/assets/products/brass_tubes04.png";
+import Reveal from "@/components/site/Reveal";
+import { categoryMap, findProduct } from "@/data/products";
+import { company } from "@/data/company";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 export default function ProductDetail() {
   const { slug, productSlug } = useParams();
-  const [activeTab, setActiveTab] = useState<"applications" | "features" | "specifications">("applications");
-
   const result = slug && productSlug ? findProduct(slug, productSlug) : null;
-
-  const productName = result?.product.name ?? (productSlug
-    ? productSlug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
-    : "Product");
-
   const product = result?.product;
   const category = result?.category;
 
-  const description = product?.description ??
-    `Shreya Coppers manufactures and supplies high-quality ${productName} that meets international standards. Our products are manufactured using premium raw materials and advanced manufacturing processes to ensure superior quality, durability, and performance.`;
+  usePageMeta(
+    product ? `${product.name} Manufacturers` : "Product Not Found",
+    product?.description?.split("\n\n")[0],
+  );
 
-  const features = product?.features ?? ["Premium quality materials", "Manufactured to international standards", "Available in custom sizes", "Competitive pricing", "Timely delivery"];
-  const applications = product?.applications ?? ["Industrial applications", "Engineering", "Construction", "Manufacturing"];
-  const specifications = product?.specifications ?? [];
+  if (!product || !category) {
+    const parent = slug ? categoryMap[slug] : undefined;
+    return (
+      <SiteLayout>
+        <PageHero
+          title="Product Not Found"
+          breadcrumbs={[
+            { label: "Products", to: "/products" },
+            ...(parent ? [{ label: parent.title, to: `/products/${parent.slug}` }] : []),
+          ]}
+        />
+        <section className="section bg-white">
+          <div className="container-wide">
+            <p className="lede">The product you are looking for does not exist or may have moved.</p>
+            <Link to={parent ? `/products/${parent.slug}` : "/products"} className="btn btn-dark mt-8">
+              <ArrowLeft className="h-4 w-4" aria-hidden /> Back to {parent?.title ?? "Products"}
+            </Link>
+          </div>
+        </section>
+      </SiteLayout>
+    );
+  }
+
+  const paragraphs = (product.description ?? "").split("\n\n").filter(Boolean);
+  const specifications = product.specifications ?? [];
+  const features = product.features ?? [];
+  const applications = product.applications ?? [];
+  const related = category.products.filter((p) => p.slug !== product.slug).slice(0, 4);
+  const quoteLink = `/contact?product=${encodeURIComponent(product.name)}`;
+  const mailLink = `${company.email.href}?subject=${encodeURIComponent(`Enquiry: ${product.name}`)}`;
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <PageHero title={productName} subtitle={category?.title} />
-
-      <section className="section-padding bg-background">
-        <div className="container-wide">
-          <Link to={`/products/${slug}`} className="inline-flex items-center gap-1 text-primary font-medium text-sm mb-8 hover:underline">
-            <ArrowLeft className="h-4 w-4" /> Back to {category?.title ?? "Category"}
+    <SiteLayout>
+      <PageHero
+        eyebrow={category.title}
+        title={product.name}
+        subtitle={paragraphs[0] && paragraphs[0].length < 260 ? paragraphs[0] : undefined}
+        breadcrumbs={[
+          { label: "Products", to: "/products" },
+          { label: category.title, to: `/products/${category.slug}` },
+        ]}
+        image={product.image}
+        imageAlt={product.name}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link to={quoteLink} className="btn btn-primary">
+            <Send className="h-4 w-4" aria-hidden /> Request Quote
           </Link>
+          {specifications.length > 0 && (
+            <a href="#specifications" className="btn btn-outline-light">
+              View Specifications
+            </a>
+          )}
+        </div>
+      </PageHero>
 
-          {/* Main content - like the screenshot */}
-          <div className="grid lg:grid-cols-5 gap-12">
-            {/* Left: Text content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="lg:col-span-3"
-            >
-              <h2 className="font-heading text-2xl md:text-3xl font-bold mb-2">
-                {productName} <span className="copper-text-gradient">Manufacturers</span>
+      <section className="section bg-white">
+        <div className="container-wide grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="min-w-0 lg:col-span-8">
+            {/* Mobile product image (desktop shows it in the hero) */}
+            {product.image && (
+              <div className="mb-10 aspect-square max-w-md overflow-hidden border border-line bg-paper lg:hidden">
+                <img src={product.image} alt={product.name} width={600} height={600} className="h-full w-full object-cover" />
+              </div>
+            )}
+
+            <Reveal>
+              <p className="eyebrow mb-4">Product Overview</p>
+              <h2 className="h-section text-balance">
+                {product.name} <span className="text-copper-dark">Manufacturers</span>
               </h2>
-              <div className="w-12 h-1 copper-gradient rounded mb-6" />
-
-              {description.split("\n\n").map((para, i) => (
-                <p key={i} className="text-muted-foreground leading-relaxed mb-4 text-[15px]">
-                  {para}
-                </p>
-              ))}
-
-              {/* Highlight box */}
-              <div className="border-l-4 border-primary bg-surface rounded-r-lg p-5 my-8">
-                <p className="text-sm text-foreground italic">
-                  In addition to this, the products offered to the clients are manufactured as per the predefined industrial standards.
-                </p>
+              <div className="prose-body mt-8 text-[16px]">
+                {paragraphs.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
               </div>
-            </motion.div>
+              <p className="mt-8 border-l-2 border-copper bg-paper px-6 py-5 text-[15px] text-ink">
+                In addition to this, the products offered to the clients are manufactured as per the predefined industrial
+                standards.
+              </p>
+            </Reveal>
 
-            {/* Right: Product image placeholder */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="lg:col-span-2"
-            >
-              <div className="bg-surface rounded-lg aspect-[4/3] flex items-center justify-center sticky top-28 overflow-hidden">
-                <img src={product?.image || brassTubesImage} alt={productName} className="w-full h-full object-cover" />
-              </div>
-            </motion.div>
+            {specifications.length > 0 && (
+              <Reveal className="mt-16">
+                <div id="specifications">
+                  <p className="eyebrow mb-4">Technical Data</p>
+                  <h2 className="text-2xl font-bold sm:text-3xl">Specifications &amp; Dimensions</h2>
+                  <div className="mt-6 overflow-x-auto border border-line">
+                    <table className="w-full min-w-[420px] text-left text-[15px]">
+                      <caption className="sr-only">{product.name} specifications</caption>
+                      <thead className="bg-ink text-white">
+                        <tr>
+                          <th scope="col" className="px-5 py-3.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em]">
+                            Property
+                          </th>
+                          <th scope="col" className="px-5 py-3.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em]">
+                            Value
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-line">
+                        {specifications.map((spec, i) => (
+                          <tr key={spec.label} className={i % 2 === 1 ? "bg-paper" : "bg-white"}>
+                            <th scope="row" className="w-1/3 px-5 py-4 font-semibold text-ink">
+                              {spec.label}
+                            </th>
+                            <td className="px-5 py-4 font-mono text-[14px] text-ink">{spec.value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </Reveal>
+            )}
+
+            <Reveal className="mt-16 grid gap-px border border-line bg-line sm:grid-cols-2">
+              {applications.length > 0 && (
+                <div className="bg-white p-6 sm:p-8">
+                  <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-copper-dark">Applications</h2>
+                  <ul className="mt-5 space-y-3">
+                    {applications.map((a) => (
+                      <li key={a} className="flex items-start gap-3 text-[15px] text-ink">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-ink" aria-hidden />
+                        {a}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {features.length > 0 && (
+                <div className="bg-paper p-6 sm:p-8">
+                  <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-copper-dark">Features</h2>
+                  <ul className="mt-5 space-y-3">
+                    {features.map((f) => (
+                      <li key={f} className="flex items-start gap-3 text-[15px] text-ink">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-copper" aria-hidden />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Reveal>
           </div>
 
-          {/* Specifications table */}
-          {specifications.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
-              <h3 className="font-heading text-xl font-bold mb-6">
-                Specifications & <span className="copper-text-gradient">Dimensions</span>
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-border rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="copper-gradient">
-                      <th className="px-6 py-3 text-left text-sm font-heading font-semibold text-primary-foreground">Property</th>
-                      <th className="px-6 py-3 text-left text-sm font-heading font-semibold text-primary-foreground">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {specifications.map((spec, i) => (
-                      <tr key={spec.label} className={i % 2 === 0 ? "bg-background" : "bg-surface"}>
-                        <td className="px-6 py-3 text-sm font-medium">{spec.label}</td>
-                        <td className="px-6 py-3 text-sm text-muted-foreground">{spec.value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Enquiry panel */}
+          <aside className="lg:col-span-4">
+            <div className="border border-line bg-paper lg:sticky lg:top-[calc(var(--header-h)+32px)]">
+              <div className="border-b border-line p-6 sm:p-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-copper-dark">Product Enquiry</p>
+                <h2 className="mt-3 text-xl font-bold">Request a quote for {product.name}</h2>
+                <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
+                  To help us respond accurately, include the grade, dimensions, quantity and any applicable standard in your
+                  enquiry.
+                </p>
+                <Link to={quoteLink} className="btn btn-primary mt-6 w-full">
+                  <Send className="h-4 w-4" aria-hidden /> Request Quote
+                </Link>
               </div>
-            </motion.div>
-          )}
-
-          {/* Tabs section: Applications, Features */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-16"
-          >
-            <div className="flex gap-1 border-b border-border mb-8">
-              {(["applications", "features", ...(specifications.length > 0 ? ["specifications"] as const : [])] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab as typeof activeTab)}
-                  className={`px-6 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors border-b-2 -mb-px ${
-                    activeTab === tab
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+              <div className="space-y-4 p-6 text-[14px] sm:p-8">
+                <a href={company.phone.href} className="flex items-center gap-3 font-semibold text-ink hover:text-copper-dark">
+                  <Phone className="h-4 w-4 text-copper-dark" aria-hidden /> {company.phone.display}
+                </a>
+                <a href={mailLink} className="flex items-center gap-3 break-all font-semibold text-ink hover:text-copper-dark">
+                  <Mail className="h-4 w-4 shrink-0 text-copper-dark" aria-hidden /> {company.email.display}
+                </a>
+                <Link to={`/products/${category.slug}`} className="link-arrow pt-2">
+                  <ArrowLeft className="h-4 w-4" aria-hidden /> Back to {category.title}
+                </Link>
+              </div>
             </div>
-
-            {activeTab === "applications" && (
-              <div className="grid sm:grid-cols-2 gap-3">
-                {applications.map((app) => (
-                  <div key={app} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
-                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                    <span className="text-sm">{app}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {activeTab === "features" && (
-              <div className="grid sm:grid-cols-2 gap-3">
-                {features.map((feat) => (
-                  <div key={feat} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
-                    <div className="w-2 h-2 rounded-full copper-gradient shrink-0" />
-                    <span className="text-sm">{feat}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {activeTab === "specifications" && specifications.length > 0 && (
-              <div className="grid sm:grid-cols-2 gap-3">
-                {specifications.map((spec) => (
-                  <div key={spec.label} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
-                    <span className="text-sm font-medium min-w-[120px]">{spec.label}:</span>
-                    <span className="text-sm text-muted-foreground">{spec.value}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </motion.div>
-
-          {/* Request Quote inline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-16 text-center"
-          >
-            <Link
-              to="/contact"
-              className="copper-gradient inline-flex items-center gap-2 px-8 py-4 rounded font-heading text-sm font-semibold text-primary-foreground uppercase tracking-wide hover:opacity-90 transition-opacity"
-            >
-              <Send className="h-4 w-4" /> Request Quote for {productName}
-            </Link>
-          </motion.div>
+          </aside>
         </div>
       </section>
 
+      {related.length > 0 && (
+        <section className="section border-t border-line bg-paper">
+          <div className="container-wide">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow mb-3">{category.title}</p>
+                <h2 className="h-section">Related products</h2>
+              </div>
+              <Link to={`/products/${category.slug}`} className="link-arrow">
+                View all {category.products.length} <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </div>
+            <ul className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+              {related.map((p) => (
+                <li key={p.slug}>
+                  <Link to={`/products/${category.slug}/${p.slug}`} className="group block">
+                    <div className="aspect-square overflow-hidden border border-line bg-white transition-colors group-hover:border-copper">
+                      {p.image && (
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          loading="lazy"
+                          width={600}
+                          height={600}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      )}
+                    </div>
+                    <h3 className="mt-3 text-[15px] font-bold leading-snug group-hover:text-copper-dark">{p.name}</h3>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
       <CTASection />
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 }

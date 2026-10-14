@@ -240,3 +240,6 @@ export const findProduct = (categorySlug: string, productSlug: string): { catego
   if (!product) return null;
   return { category, product };
 };
+
+// Prefer the company's own product photography over the generic category render.
+export const categoryImage = (category: ProductCategory): string => category.products[0]?.image ?? category.image;

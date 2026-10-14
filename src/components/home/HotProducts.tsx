@@ -1,67 +1,53 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { productCategories } from "@/data/products";
+import { findProduct } from "@/data/products";
+import SectionHeader from "@/components/site/SectionHeader";
+import Reveal from "@/components/site/Reveal";
 
-// Get featured products from different categories
-const products = [
-  { ...productCategories[0].products[6], categorySlug: "brass-products" }, // Brass Square Tubes
-  { ...productCategories[0].products[17], categorySlug: "brass-products" }, // Brass Fittings
-  { ...productCategories[1].products[6], categorySlug: "copper-products" }, // Copper Fittings
-  { ...productCategories[0].products[16], categorySlug: "brass-products" }, // Naval Brass Plates
-  { ...productCategories[2].products[4], categorySlug: "copper-alloys" }, // Copper Nickel Fittings
+const featured: [string, string][] = [
+  ["brass-products", "brass-square-tubes"],
+  ["brass-products", "brass-fittings"],
+  ["copper-products", "copper-fittings"],
+  ["brass-products", "naval-brass-plates"],
+  ["copper-alloys", "copper-nickel-fittings"],
 ];
+
+const products = featured.map(([c, p]) => findProduct(c, p)).filter((r): r is NonNullable<typeof r> => r !== null);
 
 export default function HotProducts() {
   return (
-    <section className="section-padding bg-background">
+    <section className="section bg-white" aria-labelledby="hot-heading">
       <div className="container-wide">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading text-3xl md:text-4xl font-bold">
-            Our <span className="copper-text-gradient">Hot Products</span>
-          </h2>
-          <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-            Explore our most popular copper and brass products trusted by industries worldwide
-          </p>
-        </motion.div>
+        <SectionHeader
+          id="hot-heading"
+          eyebrow="Our Hot Products"
+          title="Most requested products"
+          description="Explore our most popular copper and brass products trusted by industries worldwide"
+        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Link
-                to={`/products/${product.categorySlug}/${product.slug}`}
-                className="group block bg-card rounded-lg overflow-hidden card-shadow"
-              >
-                <div className="aspect-square overflow-hidden">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-5">
+          {products.map(({ category, product }, i) => (
+            <Reveal as="li" key={product.slug} delay={i * 0.05}>
+              <Link to={`/products/${category.slug}/${product.slug}`} className="group block">
+                <div className="aspect-square overflow-hidden border border-line bg-paper transition-colors group-hover:border-copper">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    width={600}
+                    height={600}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-heading text-sm font-semibold group-hover:text-primary transition-colors">
-                    {product.name}
-                  </h3>
-                  <span className="inline-flex items-center gap-1 mt-2 text-xs text-primary font-medium">
-                    View Details <ArrowRight className="h-3 w-3" />
-                  </span>
-                </div>
+                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.16em] text-steel">{category.title}</p>
+                <h3 className="mt-1.5 text-[16px] font-bold leading-snug group-hover:text-copper-dark">{product.name}</h3>
+                <span className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-semibold text-copper-dark">
+                  View details <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                </span>
               </Link>
-            </motion.div>
+            </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

@@ -1,30 +1,35 @@
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import SiteLayout from "@/components/layout/SiteLayout";
 import HeroSection from "@/components/home/HeroSection";
-import HotProducts from "@/components/home/HotProducts";
 import AboutCompany from "@/components/home/AboutCompany";
 import ProductCategories from "@/components/home/ProductCategories";
+import HotProducts from "@/components/home/HotProducts";
+import ManufacturingProcess from "@/components/home/ManufacturingProcess";
+import QualitySection from "@/components/home/QualitySection";
 import IndustriesServed from "@/components/home/IndustriesServed";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
 import ApplicationAreas from "@/components/home/ApplicationAreas";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
 import CTASection from "@/components/home/CTASection";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const Index = () => {
+  usePageMeta(
+    "Shreya Coppers - Copper & Alloy Manufacturing Since 1974",
+    "Leading manufacturers and exporters of copper tubes, brass tubes, copper alloys, bronze rods, titanium tubes since 1974. Gujarat, India.",
+  );
+
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <HeroSection />
-        <HotProducts />
-        <AboutCompany />
-        <ProductCategories />
-        <IndustriesServed />
-        <WhyChooseUs />
-        <ApplicationAreas />
-        <CTASection />
-      </main>
-      <Footer />
-    </div>
+    <SiteLayout>
+      <HeroSection />
+      <AboutCompany />
+      <ProductCategories />
+      <HotProducts />
+      <ManufacturingProcess />
+      <QualitySection />
+      <IndustriesServed />
+      <ApplicationAreas />
+      <WhyChooseUs />
+      <CTASection />
+    </SiteLayout>
   );
 };
 

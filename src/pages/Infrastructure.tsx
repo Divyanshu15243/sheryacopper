@@ -1,18 +1,38 @@
-import { motion } from "framer-motion";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Cpu, Factory, Shield, Users, Warehouse, Wrench } from "lucide-react";
+import SiteLayout from "@/components/layout/SiteLayout";
 import PageHero from "@/components/layout/PageHero";
-import { Factory, Shield, Wrench, Warehouse, Cpu, Users } from "lucide-react";
+import CTASection from "@/components/home/CTASection";
+import Reveal from "@/components/site/Reveal";
+import SectionHeader from "@/components/site/SectionHeader";
+import { usePageMeta } from "@/hooks/use-page-meta";
+import { cn } from "@/lib/utils";
 import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
 import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
 import warehouseImg from "@/assets/infrastructure/warehouse.jpg";
-import factoryImg from "@/assets/Factory.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const facilities = [
-  { image: factoryFloor, title: "Manufacturing Floor", description: "State-of-the-art CNC machines and production lines for precision manufacturing of copper, brass, and alloy products." },
-  { image: qualityLab, title: "Quality Control Lab", description: "Advanced testing and inspection equipment ensuring every product meets international quality standards." },
-  { image: warehouseImg, title: "Storage & Warehouse", description: "Well-organized warehouse facility for efficient inventory management and timely dispatch of orders." },
-  { image: factoryImg, title: "Main Production Unit", description: "Our primary manufacturing facility at GIDC Umbergaon, spread across a large industrial area." },
+  {
+    image: factoryFloor,
+    title: "Manufacturing Floor",
+    description:
+      "State-of-the-art CNC machines and production lines for precision manufacturing of copper, brass, and alloy products.",
+  },
+  {
+    image: qualityLab,
+    title: "Quality Control Lab",
+    description: "Advanced testing and inspection equipment ensuring every product meets international quality standards.",
+  },
+  {
+    image: warehouseImg,
+    title: "Storage & Warehouse",
+    description: "Well-organized warehouse facility for efficient inventory management and timely dispatch of orders.",
+  },
+  {
+    image: heroBg,
+    title: "Main Production Unit",
+    description: "Our primary manufacturing facility at GIDC Umbergaon, spread across a large industrial area.",
+  },
 ];
 
 const capabilities = [
@@ -24,84 +44,94 @@ const capabilities = [
   { icon: Users, title: "Skilled Workforce", desc: "Experienced team of engineers, technicians and quality inspectors" },
 ];
 
+const departments = ["Production", "Quality Assurance", "Administration", "Client Help Desk"];
+
 export default function Infrastructure() {
+  usePageMeta(
+    "Infrastructure",
+    "Advanced manufacturing facilities at GIDC Umbergaon, Gujarat — production, quality control lab, tool room and warehouse for copper and alloy products.",
+  );
+
   return (
-    <div className="min-h-screen">
-      <Header />
-      <PageHero title="Infrastructure" subtitle="Advanced manufacturing facilities powering precision metal products" />
+    <SiteLayout>
+      <PageHero
+        eyebrow="Facilities & Capabilities"
+        title="Infrastructure"
+        subtitle="Advanced manufacturing facilities powering precision metal products"
+        image={factoryFloor}
+        imageAlt="Machining line on a manufacturing floor"
+      />
 
-      <section className="section-padding bg-background">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="font-heading text-3xl font-bold">
-              Our <span className="copper-text-gradient">Facilities</span>
-            </h2>
-            <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Our manufacturing unit at GIDC Umbergaon is equipped with the latest technology and machinery for producing world-class copper and alloy products.
+      {/* Intro */}
+      <section className="section bg-white">
+        <div className="container-wide grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <Reveal className="lg:col-span-6">
+            <p className="eyebrow mb-4">Our Facilities</p>
+            <h2 className="h-section text-balance">A well-facilitated manufacturing unit at GIDC Umbergaon</h2>
+          </Reveal>
+          <Reveal delay={0.08} className="lg:col-span-6">
+            <p className="lede">
+              Our manufacturing unit at GIDC Umbergaon is equipped with the latest technology and machinery for producing
+              world-class copper and alloy products.
             </p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 gap-8">
-            {facilities.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group overflow-hidden rounded-lg card-shadow"
-              >
-                <div className="overflow-hidden aspect-[16/10]">
-                  <img src={f.image} alt={f.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div className="p-6 bg-surface">
-                  <h3 className="font-heading text-lg font-semibold mb-2">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+            <h3 className="mt-8 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-copper-dark">Departments</h3>
+            <ul className="mt-4 grid grid-cols-2 gap-px border border-line bg-line">
+              {departments.map((d, i) => (
+                <li key={d} className="flex items-center gap-3 bg-white px-4 py-4 text-[15px] font-semibold text-ink">
+                  <span className="font-mono text-[11px] font-normal text-steel">{String(i + 1).padStart(2, "0")}</span>
+                  {d}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </section>
 
-      <section className="section-padding bg-surface">
+      {/* Facilities: alternating rows */}
+      <section className="bg-paper py-16 md:py-24">
+        <div className="container-wide space-y-16 md:space-y-24">
+          {facilities.map((f, i) => (
+            <Reveal key={f.title} className="grid items-center gap-8 md:grid-cols-12 md:gap-12">
+              <div className={cn("overflow-hidden bg-charcoal md:col-span-7", i % 2 === 1 && "md:order-2")}>
+                <img
+                  src={f.image}
+                  alt={f.title}
+                  loading="lazy"
+                  className="aspect-[16/10] h-full w-full object-cover"
+                />
+              </div>
+              <div className={cn("md:col-span-5", i % 2 === 1 && "md:order-1")}>
+                <span className="font-mono text-[12px] text-copper-dark">{String(i + 1).padStart(2, "0")} / {String(facilities.length).padStart(2, "0")}</span>
+                <h3 className="mt-3 text-2xl font-bold sm:text-3xl">{f.title}</h3>
+                <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground">{f.description}</p>
+              </div>
+            </Reveal>
+          ))}
+          <p className="text-[13px] text-steel">Photography shown is representative.</p>
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section className="section relative isolate overflow-hidden bg-ink text-white">
+        <div className="tech-grid absolute inset-0 -z-10" aria-hidden />
         <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="font-heading text-3xl font-bold">
-              Manufacturing <span className="copper-text-gradient">Capabilities</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SectionHeader dark eyebrow="Capabilities" title="Manufacturing Capabilities" />
+          <ul className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((cap, i) => (
-              <motion.div
-                key={cap.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-background p-8 rounded-lg card-shadow text-center group hover:bg-graphite transition-colors duration-300"
-              >
-                <cap.icon className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-heading text-lg font-semibold mb-2 group-hover:text-primary-foreground transition-colors">{cap.title}</h3>
-                <p className="text-sm text-muted-foreground group-hover:text-primary-foreground/70 transition-colors">{cap.desc}</p>
-              </motion.div>
+              <Reveal as="li" key={cap.title} delay={(i % 3) * 0.05} className="bg-ink p-7 sm:p-9">
+                <div className="flex items-center justify-between">
+                  <cap.icon className="h-6 w-6 text-copper" aria-hidden />
+                  <span className="font-mono text-[11px] text-white/40">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <h3 className="mt-8 text-xl font-bold text-white">{cap.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-white/65">{cap.desc}</p>
+              </Reveal>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      <Footer />
-    </div>
+      <CTASection />
+    </SiteLayout>
   );
 }

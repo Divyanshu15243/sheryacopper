@@ -1,160 +1,235 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import { ArrowRight, Download, ChevronLeft, ChevronRight } from "lucide-react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Download, Pause, Play } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import { findProduct, productCategories } from "@/data/products";
+import { company, productCount } from "@/data/company";
+import { cn } from "@/lib/utils";
 
 const slides = [
   {
-    image: heroBg,
-    badge: "Since 1974",
-    heading: (
-      <>
-        Precision Copper & Alloy Manufacturing
-        <span className="copper-text-gradient"> Since 1974</span>
-      </>
-    ),
+    tab: "Since 1974",
+    before: "Precision Copper & Alloy Manufacturing",
+    accent: "Since 1974",
     description:
       "Leading manufacturers and exporters of high-quality Copper, Brass, Bronze, Titanium, and Inconel products for global industries.",
+    product: findProduct("copper-products", "copper-tubes"),
   },
   {
-    image: heroBg,
-    badge: "ISO Certified",
-    heading: (
-      <>
-        Premium Quality
-        <span className="copper-text-gradient"> Metal Products</span>
-      </>
-    ),
+    tab: "ISO Certified",
+    before: "Premium Quality",
+    accent: "Metal Products",
     description:
       "Brass tubes, copper nickel tubes, bronze rods, titanium tubes, inconel tubes and more — manufactured to international standards.",
+    product: findProduct("brass-products", "brass-tubes"),
   },
   {
-    image: heroBg,
-    badge: "Global Export",
-    heading: (
-      <>
-        Trusted by Industries
-        <span className="copper-text-gradient"> Worldwide</span>
-      </>
-    ),
-    description:
-      "Serving Automotive, Electrical, Marine, Oil & Gas, HVAC and Construction sectors across 40+ countries.",
+    tab: "Global Export",
+    before: "Trusted by Industries",
+    accent: "Worldwide",
+    description: "Serving Automotive, Electrical, Marine, Oil & Gas, HVAC and Construction sectors.",
+    product: findProduct("copper-alloys", "copper-nickel-tubes"),
   },
 ];
 
+const facts = [
+  { label: "Established", value: String(company.established) },
+  { label: "Quality System", value: company.certification.standard },
+  { label: "Product Range", value: `${productCategories.length} categories · ${productCount} products` },
+  { label: "Manufacturing Base", value: "GIDC Umbergaon, Gujarat" },
+];
+
+// 2x2 grid on mobile, single row on desktop: hairlines between cells only
+const factCellClass = [
+  "",
+  "border-l pl-4 sm:pl-6",
+  "border-t lg:border-l lg:border-t-0 lg:pl-6",
+  "border-l border-t pl-4 sm:pl-6 lg:border-t-0",
+];
+
+export const SLIDE_INTERVAL = 6500;
+
 export default function HeroSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: false }),
-  ]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(true);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-  const scrollTo = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
+  const go = useCallback((i: number) => setActive((i + slides.length) % slides.length), []);
+  const current = slides[active].product;
 
+  // Auto-advance; restarting on every change keeps the timer in step with the progress bar
   useEffect(() => {
-    if (!emblaApi) return;
-    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
-    emblaApi.on("select", onSelect);
-    onSelect();
-    return () => { emblaApi.off("select", onSelect); };
-  }, [emblaApi]);
+    if (!playing) return;
+    const t = window.setTimeout(() => go(active + 1), SLIDE_INTERVAL);
+    return () => window.clearTimeout(t);
+  }, [active, playing, go]);
 
   return (
-    <section className="relative min-h-[85vh] overflow-hidden">
-      <div ref={emblaRef} className="h-full">
-        <div className="flex h-full">
-          {slides.map((slide, i) => (
-            <div key={i} className="relative min-h-[85vh] flex-[0_0_100%] flex items-center">
-              <div className="absolute inset-0">
-                <img
-                  src={slide.image}
-                  alt="Copper tube manufacturing"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-graphite/95 via-graphite/80 to-graphite/40" />
-              </div>
-              <div className="relative container-wide px-4 sm:px-6 lg:px-8 py-20">
-                <AnimatePresence mode="wait">
-                  {selectedIndex === i && (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.6 }}
-                      className="max-w-2xl"
-                    >
-                      <div className="inline-block copper-gradient px-4 py-1.5 rounded-sm mb-6">
-                        <span className="font-heading text-xs font-semibold uppercase tracking-widest text-primary-foreground">
-                          {slide.badge}
-                        </span>
-                      </div>
-                      <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight">
-                        {slide.heading}
-                      </h1>
-                      <p className="mt-6 text-lg text-primary-foreground/70 leading-relaxed max-w-xl font-body">
-                        {slide.description}
-                      </p>
-                      <div className="mt-8 flex flex-wrap gap-4">
-                        <Link
-                          to="/products"
-                          className="copper-gradient inline-flex items-center gap-2 px-6 py-3.5 rounded font-heading text-sm font-semibold text-primary-foreground uppercase tracking-wide hover:opacity-90 transition-opacity"
-                        >
-                          Explore Products <ArrowRight className="h-4 w-4" />
-                        </Link>
-                        <Link
-                          to="/contact"
-                          className="inline-flex items-center gap-2 px-6 py-3.5 rounded border border-primary-foreground/30 font-heading text-sm font-semibold text-primary-foreground uppercase tracking-wide hover:bg-primary-foreground/10 transition-colors"
-                        >
-                          Request Quote
-                        </Link>
-                        <a
-                          href="#"
-                          className="inline-flex items-center gap-2 px-6 py-3.5 rounded font-heading text-sm font-medium text-primary-foreground/60 uppercase tracking-wide hover:text-primary-foreground transition-colors"
-                        >
-                          <Download className="h-4 w-4" /> Catalog
-                        </a>
-                      </div>
-                    </motion.div>
+    <section
+      aria-roledescription="carousel"
+      aria-label="Shreya Coppers highlights"
+      className="relative isolate overflow-hidden bg-ink text-white"
+    >
+      <img
+        src={heroBg}
+        alt=""
+        width={1920}
+        height={1080}
+        className="absolute inset-0 -z-20 h-full w-full object-cover opacity-30"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink via-ink/95 to-ink/70" />
+      <div className="tech-grid absolute inset-0 -z-10" aria-hidden />
+      <div className="absolute -right-32 top-1/4 -z-10 h-[28rem] w-[28rem] rounded-full bg-copper/15 blur-3xl" aria-hidden />
+
+      <div className="container-wide pt-12 sm:pt-16 lg:pt-20">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          {/* Slide copy: every slide shares one grid cell so the height never jumps */}
+          <div className="grid lg:col-span-6" aria-live={playing ? "off" : "polite"}>
+            {slides.map((s, i) => {
+              const Heading = i === 0 ? "h1" : "h2";
+              const isActive = i === active;
+              return (
+                <div
+                  key={s.tab}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} of ${slides.length}`}
+                  aria-hidden={!isActive}
+                  className={cn(
+                    "transition-all duration-700 ease-out [grid-area:1/1]",
+                    isActive ? "visible translate-y-0 opacity-100" : "invisible translate-y-3 opacity-0",
                   )}
-                </AnimatePresence>
-              </div>
+                >
+                  <p className="eyebrow eyebrow-light mb-6">
+                    {String(i + 1).padStart(2, "0")} · {s.tab}
+                  </p>
+                  <Heading className="display text-balance text-white">
+                    {s.before} <span className="text-copper">{s.accent}</span>
+                  </Heading>
+                  <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">{s.description}</p>
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <Link to="/products" tabIndex={isActive ? undefined : -1} className="btn btn-primary">
+                      Explore Our Products <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                    <Link to="/contact" tabIndex={isActive ? undefined : -1} className="btn btn-outline-light">
+                      Request a Quote
+                    </Link>
+                    <Link
+                      to="/catalogue"
+                      tabIndex={isActive ? undefined : -1}
+                      className="btn px-2 text-white/75 hover:text-white sm:px-4"
+                    >
+                      <Download className="h-4 w-4" aria-hidden /> Catalogue
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Product visual */}
+          <div className="lg:col-span-6">
+            <div className="corner-marks relative mx-auto aspect-[4/3] max-w-xl overflow-hidden bg-white lg:aspect-[5/4] lg:max-w-none">
+              {slides.map((s, i) =>
+                s.product?.product.image ? (
+                  <img
+                    key={s.tab}
+                    src={s.product.product.image}
+                    alt={i === active ? s.product.product.name : ""}
+                    width={600}
+                    height={600}
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-out",
+                      i === active ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
+                    )}
+                  />
+                ) : null,
+              )}
+              {current && (
+                <Link
+                  to={`/products/${current.category.slug}/${current.product.slug}`}
+                  className="group absolute bottom-0 left-0 flex items-center gap-4 bg-ink px-5 py-4 text-white transition-colors hover:bg-copper-dark"
+                >
+                  <span>
+                    <span className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-copper group-hover:text-white/80">
+                      {current.category.title}
+                    </span>
+                    <span className="mt-1 block font-heading text-[15px] font-bold">{current.product.name}</span>
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-white/70" aria-hidden />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Slider controls */}
+        <div className="mt-12 flex items-center gap-4 lg:mt-14">
+          <div className="grid flex-1 grid-cols-3 gap-3 sm:gap-6" role="tablist" aria-label="Choose slide">
+            {slides.map((s, i) => (
+              <button
+                key={s.tab}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Slide ${i + 1}: ${s.tab}`}
+                onClick={() => go(i)}
+                className="group py-2 text-left"
+              >
+                <span className="relative block h-0.5 overflow-hidden bg-white/15">
+                  {i === active && (
+                    <span
+                      key={`${active}-${playing}`}
+                      className={cn("absolute inset-0 origin-left bg-copper", playing && "animate-progress")}
+                    />
+                  )}
+                </span>
+                <span
+                  className={cn(
+                    "mt-3 hidden font-mono text-[11px] uppercase tracking-[0.16em] transition-colors sm:block",
+                    i === active ? "text-white" : "text-white/45 group-hover:text-white/75",
+                  )}
+                >
+                  {String(i + 1).padStart(2, "0")} {s.tab}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setPlaying((p) => !p)}
+              aria-label={playing ? "Pause slideshow" : "Play slideshow"}
+              className="flex h-11 w-11 items-center justify-center border border-white/20 text-white transition-colors hover:border-copper hover:text-copper"
+            >
+              {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => go(active - 1)}
+              aria-label="Previous slide"
+              className="flex h-11 w-11 items-center justify-center border border-white/20 text-white transition-colors hover:border-copper hover:text-copper"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => go(active + 1)}
+              aria-label="Next slide"
+              className="flex h-11 w-11 items-center justify-center border border-white/20 text-white transition-colors hover:border-copper hover:text-copper"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        <dl className="mt-12 grid grid-cols-2 border-t border-white/15 lg:mt-14 lg:grid-cols-4">
+          {facts.map((f, i) => (
+            <div key={f.label} className={`border-white/15 py-5 pr-4 sm:py-6 ${factCellClass[i]}`}>
+              <dt className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/50">{f.label}</dt>
+              <dd className="mt-2 font-heading text-[15px] font-bold text-white sm:text-lg">{f.value}</dd>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Navigation arrows */}
-      <button
-        onClick={scrollPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/20 transition-colors"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-      <button
-        onClick={scrollNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/20 transition-colors"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => scrollTo(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              selectedIndex === i
-                ? "w-8 bg-primary"
-                : "w-2 bg-primary-foreground/40 hover:bg-primary-foreground/60"
-            }`}
-          />
-        ))}
+        </dl>
       </div>
     </section>
   );

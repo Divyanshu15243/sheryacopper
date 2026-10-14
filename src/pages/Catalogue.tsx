@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import PageHero from "@/components/layout/PageHero";
-import { Download, CheckCircle, FileText } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 import { z } from "zod";
+import { ArrowRight, CheckCircle2, Download, FileText } from "lucide-react";
+import SiteLayout from "@/components/layout/SiteLayout";
+import PageHero from "@/components/layout/PageHero";
+import { useToast } from "@/hooks/use-toast";
+import { usePageMeta } from "@/hooks/use-page-meta";
+import { productCategories } from "@/data/products";
+
+const CATALOGUE_URL = "https://www.shreyacoppers.com/wp-content/uploads/2020/08/COPPER-NICKEL-FITTING-SV.pdf";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -14,11 +17,22 @@ const formSchema = z.object({
   company: z.string().trim().min(1, "Company name is required").max(200),
 });
 
+const fields = [
+  { name: "name", label: "Full Name", type: "text", placeholder: "Your full name", autoComplete: "name" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "your@email.com", autoComplete: "email" },
+  { name: "phone", label: "Phone Number", type: "tel", placeholder: "+91 XXXXX XXXXX", autoComplete: "tel" },
+  { name: "company", label: "Company Name", type: "text", placeholder: "Your company name", autoComplete: "organization" },
+] as const;
+
+const emptyForm = { name: "", email: "", phone: "", company: "" };
+
 export default function Catalogue() {
+  usePageMeta("Download Catalogue", "Get the Shreya Coppers product catalogue — copper, brass, copper alloy, bronze, titanium, inconel and SS products.");
+
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [form, setForm] = useState({ name: "", email: "", phone: "", company: "" });
+  const [form, setForm] = useState(emptyForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,93 +45,131 @@ export default function Catalogue() {
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
-        if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+        if (err.path[0] && !fieldErrors[err.path[0] as string]) fieldErrors[err.path[0] as string] = err.message;
       });
       setErrors(fieldErrors);
+      const first = Object.keys(fieldErrors)[0];
+      if (first) document.getElementById(`catalogue-${first}`)?.focus();
       return;
     }
     setSubmitted(true);
     toast({ title: "Catalogue Request Submitted", description: "You will receive the catalogue on your email shortly." });
     // Trigger PDF download
-    window.open("https://www.shreyacoppers.com/wp-content/uploads/2020/08/COPPER-NICKEL-FITTING-SV.pdf", "_blank");
+    window.open(CATALOGUE_URL, "_blank");
   };
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <PageHero title="Download Catalogue" subtitle="Get our complete product catalogue delivered to your inbox" />
+    <SiteLayout>
+      <PageHero
+        eyebrow="Product Literature"
+        title="Download Catalogue"
+        subtitle="Get our complete product catalogue delivered to your inbox"
+      />
 
-      <section className="section-padding bg-background">
-        <div className="container-wide max-w-2xl mx-auto">
-          {submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-16"
-            >
-              <CheckCircle className="h-16 w-16 text-primary mx-auto mb-6" />
-              <h2 className="font-heading text-2xl font-bold mb-4">Thank You!</h2>
-              <p className="text-muted-foreground mb-6">
-                Your catalogue request has been submitted successfully. You will receive it on your email shortly.
-              </p>
-              <button
-                onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", company: "" }); }}
-                className="copper-gradient px-6 py-3 rounded font-heading text-sm font-semibold text-primary-foreground uppercase tracking-wide hover:opacity-90 transition-opacity"
-              >
-                Download Another
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <div className="bg-surface rounded-lg p-8 sm:p-10 card-shadow">
-                <div className="flex items-center gap-3 mb-8">
-                  <FileText className="h-8 w-8 text-primary" />
-                  <div>
-                    <h2 className="font-heading text-xl font-bold">Product Catalogue</h2>
-                    <p className="text-sm text-muted-foreground">Fill in the form to receive our complete product catalogue</p>
+      <section className="section bg-white">
+        <div className="container-wide grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* What's inside */}
+          <div className="lg:col-span-6">
+            <p className="eyebrow mb-4">What's Covered</p>
+            <h2 className="h-section text-balance">Our complete range of copper and alloy products</h2>
+            <p className="lede mt-4">
+              Fill in the form to receive our complete product catalogue. Browse the categories below online at any time.
+            </p>
+            <ol className="mt-10 border-t border-line">
+              {productCategories.map((c, i) => (
+                <li key={c.slug}>
+                  <Link
+                    to={`/products/${c.slug}`}
+                    className="group flex items-baseline gap-4 border-b border-line py-4 transition-colors hover:text-copper-dark"
+                  >
+                    <span className="font-mono text-[11px] text-steel">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="flex-1 font-heading text-[16px] font-semibold">{c.title}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-steel">
+                      {c.products.length} {c.products.length === 1 ? "product" : "products"}
+                    </span>
+                    <ArrowRight className="h-4 w-4 self-center text-steel transition-colors group-hover:text-copper-dark" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Form */}
+          <div className="lg:col-span-6">
+            <div className="corner-marks border border-line bg-paper p-6 sm:p-10 lg:sticky lg:top-[calc(var(--header-h)+32px)]">
+              {submitted ? (
+                <div className="py-10 text-center" role="status">
+                  <CheckCircle2 className="mx-auto h-14 w-14 text-copper-dark" aria-hidden />
+                  <h2 className="mt-6 text-2xl font-bold">Thank You!</h2>
+                  <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
+                    Your catalogue request has been submitted successfully. You will receive it on your email shortly.
+                  </p>
+                  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                    <a href={CATALOGUE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-dark">
+                      <Download className="h-4 w-4" aria-hidden /> Open Catalogue PDF
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setForm(emptyForm);
+                      }}
+                      className="btn btn-outline"
+                    >
+                      Download Another
+                    </button>
                   </div>
                 </div>
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {[
-                    { name: "name", label: "Full Name", type: "text", placeholder: "Your full name" },
-                    { name: "email", label: "Email Address", type: "email", placeholder: "your@email.com" },
-                    { name: "phone", label: "Phone Number", type: "tel", placeholder: "+91 XXXXX XXXXX" },
-                    { name: "company", label: "Company Name", type: "text", placeholder: "Your company name" },
-                  ].map((field) => (
-                    <div key={field.name}>
-                      <label className="block text-sm font-heading font-medium mb-1.5">{field.label}</label>
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        value={form[field.name as keyof typeof form]}
-                        onChange={handleChange}
-                        placeholder={field.placeholder}
-                        className="w-full px-4 py-3 rounded border border-border bg-background text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
-                      />
-                      {errors[field.name] && (
-                        <p className="text-sm text-destructive mt-1">{errors[field.name]}</p>
-                      )}
+              ) : (
+                <>
+                  <div className="flex items-start gap-4 border-b border-line pb-6">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-ink text-copper">
+                      <FileText className="h-6 w-6" aria-hidden />
+                    </span>
+                    <div>
+                      <h2 className="text-xl font-bold">Product Catalogue</h2>
+                      <p className="mt-1 text-[14px] text-muted-foreground">
+                        Fill in the form to receive our complete product catalogue
+                      </p>
                     </div>
-                  ))}
+                  </div>
 
-                  <button
-                    type="submit"
-                    className="w-full copper-gradient inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded font-heading text-sm font-semibold text-primary-foreground uppercase tracking-wide hover:opacity-90 transition-opacity"
-                  >
-                    <Download className="h-4 w-4" /> Download Catalogue
-                  </button>
-                </form>
-              </div>
-            </motion.div>
-          )}
+                  <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
+                    {fields.map((field) => (
+                      <div key={field.name}>
+                        <label htmlFor={`catalogue-${field.name}`} className="field-label">
+                          {field.label} <span className="text-copper-dark">*</span>
+                        </label>
+                        <input
+                          id={`catalogue-${field.name}`}
+                          type={field.type}
+                          name={field.name}
+                          autoComplete={field.autoComplete}
+                          value={form[field.name]}
+                          onChange={handleChange}
+                          placeholder={field.placeholder}
+                          className="field"
+                          aria-invalid={!!errors[field.name]}
+                          aria-describedby={errors[field.name] ? `catalogue-${field.name}-error` : undefined}
+                        />
+                        {errors[field.name] && (
+                          <p id={`catalogue-${field.name}-error`} className="field-error">
+                            {errors[field.name]}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+
+                    <button type="submit" className="btn btn-primary w-full">
+                      <Download className="h-4 w-4" aria-hidden /> Download Catalogue
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 }

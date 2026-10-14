@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Shield, Factory, Users, Truck } from "lucide-react";
+import { Factory, Shield, Truck, Users } from "lucide-react";
+import Reveal from "@/components/site/Reveal";
 
 const features = [
   { icon: Shield, title: "Premium Quality Materials", desc: "All products undergo rigorous quality testing to meet international standards." },
@@ -10,37 +10,37 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="section-padding bg-surface">
+    <section className="section bg-paper" aria-labelledby="why-heading">
       <div className="container-wide">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading text-3xl md:text-4xl font-bold">
-            Why Choose <span className="copper-text-gradient">Shreya Coppers</span>
-          </h2>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-center p-8 bg-background rounded-lg card-shadow hover:copper-glow transition-shadow"
-            >
-              <div className="w-14 h-14 copper-gradient rounded-lg flex items-center justify-center mx-auto mb-4">
-                <f.icon className="h-7 w-7 text-primary-foreground" />
-              </div>
-              <h3 className="font-heading text-base font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground">{f.desc}</p>
-            </motion.div>
-          ))}
+        <div className="grid gap-6 pb-12 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-16">
+          <div className="lg:col-span-7">
+            <p className="eyebrow mb-4">Our Advantages</p>
+            <h2 id="why-heading" className="h-section text-balance">
+              Why choose Shreya Coppers
+            </h2>
+          </div>
+          <p className="lede lg:col-span-5">
+            Five decades of copper and alloy manufacturing, backed by a certified quality system and an experienced team.
+          </p>
         </div>
+
+        <ol className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((f, i) => (
+            <Reveal
+              as="li"
+              key={f.title}
+              delay={i * 0.05}
+              className="relative border-t border-line pt-8 before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-copper before:content-['']"
+            >
+              <div className="flex items-center gap-4">
+                <span className="font-heading text-4xl font-extrabold text-copper">{String(i + 1).padStart(2, "0")}</span>
+                <f.icon className="h-5 w-5 text-steel" aria-hidden />
+              </div>
+              <h3 className="mt-6 text-lg font-bold">{f.title}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{f.desc}</p>
+            </Reveal>
+          ))}
+        </ol>
       </div>
     </section>
   );

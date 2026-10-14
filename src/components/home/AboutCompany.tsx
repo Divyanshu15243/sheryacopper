@@ -1,61 +1,78 @@
-import { motion } from "framer-motion";
-import { Award, Globe, Factory, Calendar } from "lucide-react";
-import factoryImg from "@/assets/Factory.jpg";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
+import Reveal from "@/components/site/Reveal";
+import { company } from "@/data/company";
 
-const stats = [
-  { icon: Calendar, value: "50+", label: "Years Experience" },
-  { icon: Award, value: "ISO", label: "Certified" },
-  { icon: Globe, value: "Global", label: "Export Network" },
-  { icon: Factory, value: "Advanced", label: "Manufacturing" },
+const glance = [
+  { term: "Established", detail: `${company.established}, Gujarat, India` },
+  { term: "Materials", detail: "Copper, Copper Alloy, Titanium and Brass" },
+  { term: "Manufacturing Base", detail: company.address.lines.slice(0, 2).join(", ") },
+  { term: "Certified Scope", detail: `${company.certification.standard} — ${company.certification.scope}` },
 ];
+
+// Two short facts side by side, then the longer ones full width
+const glanceCellClass = ["", "border-t sm:border-l sm:border-t-0", "border-t sm:col-span-2", "border-t sm:col-span-2"];
 
 export default function AboutCompany() {
   return (
-    <section className="section-padding bg-surface">
-      <div className="container-wide">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <img src={factoryImg} alt="Shreya Coppers factory" className="rounded-lg w-full object-cover aspect-[4/3]" />
-            <div className="absolute -bottom-6 -right-6 copper-gradient p-6 rounded-lg hidden md:block">
-              <span className="font-heading text-4xl font-bold text-primary-foreground">50+</span>
-              <p className="text-sm text-primary-foreground/80">Years of Excellence</p>
-            </div>
-          </motion.div>
+    <section className="section bg-white" aria-labelledby="about-heading">
+      <div className="container-wide grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="lg:col-span-5">
+          <p className="eyebrow mb-4">About the Company</p>
+          <h2 id="about-heading" className="h-section text-balance">
+            Welcome to Shreya Coppers
+          </h2>
+          <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.14em] text-steel">
+            Tube Manufacturers · Copper Alloy
+          </p>
+          <div className="prose-body mt-8 text-[16px]">
+            <p>
+              Established in the year 1974, Shreya Coppers is counted as one of the leading manufacturers, exporters, and
+              suppliers of Industrial Products like Pipes, Tubes, Capillary pipes &amp; Tubes, Flanges, Pipe fittings of
+              metals like Copper, Copper Alloy, Titanium, and Brass.
+            </p>
+            <p>
+              With rich industrial experience and powerful manufacturing setup, we are producing quality copper products. Our
+              committed and qualified team works relentlessly to provide the best manufacturing and innovative customer
+              experience possible.
+            </p>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-heading text-3xl md:text-4xl font-bold mb-2">
-              Welcome to <span className="copper-text-gradient">Shreya Coppers</span>
-            </h2>
-            <p className="text-sm text-primary font-heading font-semibold uppercase tracking-wider mb-6">
-              Tube Manufacturers · Copper Alloy · Tube Manufacturers
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Established in the year 1974, our Shreya coppers is counted as one of the leading manufacturers, exporters, and suppliers of Industrial Products like Pipes, Tubes, Capillary pipes & Tubes, Flanges, Pipe fittings of metals like Copper, Copper Alloy, Titanium, and Brass.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              With rich industrial experience and powerful manufacturing setup, we are producing quality copper products. Our committed and qualified team works relentlessly to provide the best manufacturing and innovative customer experience possible.
-            </p>
+          <div className="mt-10 flex items-end gap-5 border-t border-line pt-8">
+            <span className="font-heading text-6xl font-extrabold leading-none tracking-tight text-copper">50+</span>
+            <span className="pb-1 text-[15px] font-medium leading-snug text-ink">
+              Years of copper &amp; alloy
+              <br />
+              manufacturing experience
+            </span>
+          </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center p-4 bg-background rounded-lg card-shadow">
-                  <stat.icon className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <div className="font-heading text-lg font-bold">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+          <Link to="/about" className="link-arrow mt-10">
+            More about our company <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+        </Reveal>
+
+        <Reveal delay={0.1} className="lg:col-span-7">
+          <div className="aspect-[16/10] overflow-hidden bg-paper">
+            <img
+              src={factoryFloor}
+              alt="Tube processing machinery on a manufacturing floor with copper tubes in the foreground"
+              loading="lazy"
+              width={640}
+              height={512}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <dl className="mt-0 grid border-x border-b border-line sm:grid-cols-2">
+            {glance.map((g, i) => (
+              <div key={g.term} className={`border-line p-6 ${glanceCellClass[i]}`}>
+                <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-copper-dark">{g.term}</dt>
+                <dd className="mt-2 text-[15px] leading-relaxed text-ink">{g.detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
       </div>
     </section>
   );
