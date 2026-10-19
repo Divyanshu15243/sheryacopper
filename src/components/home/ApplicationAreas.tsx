@@ -4,9 +4,7 @@ import electricalImg from "@/assets/applications/electrical.jpg";
 import cablesImg from "@/assets/applications/cables.jpg";
 import hvacImg from "@/assets/applications/hvac.jpg";
 import plumbingImg from "@/assets/applications/plumbing.jpg";
-import SectionHeader from "@/components/site/SectionHeader";
 import Reveal from "@/components/site/Reveal";
-import { cn } from "@/lib/utils";
 
 const areas = [
   { image: constructionImg, label: "Construction" },
@@ -17,39 +15,46 @@ const areas = [
   { image: plumbingImg, label: "Pipe Fittings" },
 ];
 
-// Editorial mosaic on desktop: two wide tiles, four standard tiles
-const tileClass = ["lg:col-span-2", "", "", "", "", "lg:col-span-2"];
-
 export default function ApplicationAreas() {
   return (
-    <section className="section bg-white" aria-labelledby="applications-heading">
+    <section className="bg-white pb-20 md:pb-28" aria-labelledby="applications-heading">
       <div className="container-wide">
-        <SectionHeader id="applications-heading" eyebrow="Applications" title="Application Areas" />
+        <div className="m-card px-4 py-14 sm:px-8 md:py-20 lg:px-14">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <span className="m-eyebrow mb-5">Applications</span>
+            <h2 id="applications-heading" className="m-h2">
+              Copper at Work, Everywhere
+            </h2>
+            <p className="m-lede mt-5">
+              From building services to vehicles and power networks, our tubes, rods and fittings are engineered into the
+              systems industries depend on every day.
+            </p>
+          </Reveal>
 
-        <ul className="grid grid-cols-2 gap-2 sm:gap-4 lg:auto-rows-[250px] lg:grid-cols-4">
-          {areas.map((area, i) => (
-            <Reveal
-              as="li"
-              key={area.label}
-              delay={(i % 3) * 0.05}
-              className={cn("group relative aspect-[4/3] overflow-hidden bg-charcoal lg:aspect-auto", tileClass[i])}
-            >
-              <img
-                src={area.image}
-                alt=""
-                loading="lazy"
-                width={640}
-                height={512}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-4 sm:p-5">
-                <h3 className="text-[15px] font-bold text-white sm:text-lg">{area.label}</h3>
-                <span className="hidden font-mono text-[11px] text-white/60 sm:block">{String(i + 1).padStart(2, "0")}</span>
-              </div>
-            </Reveal>
-          ))}
-        </ul>
+          <ul className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+            {areas.map((area, i) => (
+              <Reveal
+                as="li"
+                key={area.label}
+                delay={(i % 3) * 0.05}
+                className="group relative aspect-[4/3] overflow-hidden rounded bg-charcoal"
+              >
+                <img
+                  src={area.image}
+                  alt=""
+                  loading="lazy"
+                  width={640}
+                  height={480}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/5 to-transparent" />
+                <h3 className="absolute inset-x-0 bottom-0 p-4 font-body text-[15px] font-light text-white sm:p-5 sm:text-lg">
+                  {area.label}
+                </h3>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

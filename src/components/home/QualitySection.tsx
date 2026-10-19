@@ -1,66 +1,54 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import certificate from "@/assets/shrey-certificate-1024x1024.png";
 import Reveal from "@/components/site/Reveal";
-import { company, referencedStandards } from "@/data/company";
+import { productCategories } from "@/data/products";
+import { company, productCount, referencedStandards } from "@/data/company";
+
+const stats = [
+  { value: String(company.established), label: "Established in Gujarat, India" },
+  { value: "ISO", label: `${company.certification.standard.replace("ISO ", "")} Certified` },
+  { value: `${productCount}+`, label: `Products across ${productCategories.length} categories` },
+  { value: "Export", label: "Supplying industries worldwide" },
+];
 
 export default function QualitySection() {
-  const cert = company.certification;
   return (
-    <section className="section bg-white" aria-labelledby="quality-heading">
-      <div className="container-wide grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-        <Reveal className="order-2 lg:order-1 lg:col-span-5">
-          <figure className="corner-marks border border-line bg-paper p-6 sm:p-10">
-            <img
-              src={certificate}
-              alt={`Shreya Coppers ${cert.standard} ${cert.title}`}
-              loading="lazy"
-              width={1024}
-              height={1024}
-              className="mx-auto w-full max-w-md"
-            />
-            <figcaption className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-steel">
-              {cert.title} · {cert.standard}
-            </figcaption>
-          </figure>
+    <section className="bg-white py-20 md:py-28" aria-labelledby="quality-heading">
+      <div className="container-wide">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="m-eyebrow mb-5">Quality &amp; Global Outlook</span>
+          <h2 id="quality-heading" className="m-h2">
+            Built in India. Trusted Worldwide.
+          </h2>
+          <p className="m-lede mt-5">
+            Every product is manufactured from high-grade raw material on ultra-modern equipment, in compliance with
+            relevant international standards — making Shreya Coppers a reliable partner across borders.
+          </p>
         </Reveal>
 
-        <Reveal delay={0.08} className="order-1 lg:order-2 lg:col-span-7">
-          <p className="eyebrow mb-4">Quality &amp; Certification</p>
-          <h2 id="quality-heading" className="h-section text-balance">
-            An {cert.standard} certified quality management system
-          </h2>
-          <p className="lede mt-5">
-            In our production process, we ensure that only high-grade raw material is used along with ultra-modern equipment
-            and machinery, and that products are designed in compliance with relevant international standards.
-          </p>
+        <dl className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {stats.map((s, i) => (
+            <Reveal key={s.label} delay={i * 0.05} className="m-card flex flex-col-reverse px-4 py-7 text-center">
+              {/* dt comes first for valid markup; flex-col-reverse shows the figure on top */}
+              <dt className="mt-2 font-body text-[12px] font-light text-muted-foreground">{s.label}</dt>
+              <dd className="bg-copper-gradient bg-clip-text font-body text-3xl font-light tracking-[-0.02em] text-transparent sm:text-[2rem]">
+                {s.value}
+              </dd>
+            </Reveal>
+          ))}
+        </dl>
 
-          <dl className="mt-10 divide-y divide-line border-y border-line">
-            {[
-              { term: "Standard", detail: cert.standard },
-              { term: "Certificate", detail: `${cert.title} — ${cert.issuer}` },
-              { term: "Certified Scope", detail: cert.scope },
-            ].map((row) => (
-              <div key={row.term} className="grid gap-1 py-4 sm:grid-cols-[180px_1fr] sm:gap-6">
-                <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-copper-dark sm:pt-1">{row.term}</dt>
-                <dd className="text-[15px] font-medium leading-relaxed text-ink">{row.detail}</dd>
-              </div>
+        <Reveal className="mt-10 flex flex-col items-center gap-5 text-center">
+          <p className="m-eyebrow">Standards referenced in our specifications</p>
+          <ul className="flex max-w-3xl flex-wrap justify-center gap-2">
+            {referencedStandards.map((s) => (
+              <li key={s} className="m-tag border-line text-ink">
+                {s}
+              </li>
             ))}
-          </dl>
-
-          <div className="mt-8">
-            <p className="text-[13px] font-semibold text-ink">Standards referenced in our product specifications</p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {referencedStandards.map((s) => (
-                <li key={s} className="border border-line bg-paper px-3 py-1.5 font-mono text-[12px] text-ink">
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <Link to="/awards" className="link-arrow mt-10">
-            Awards &amp; certifications <ArrowRight className="h-4 w-4" aria-hidden />
+          </ul>
+          <Link to="/awards" className="m-btn m-btn-outline mt-2">
+            Awards &amp; Certifications <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
         </Reveal>
       </div>

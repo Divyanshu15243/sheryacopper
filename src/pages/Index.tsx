@@ -8,7 +8,7 @@ import QualitySection from "@/components/home/QualitySection";
 import IndustriesServed from "@/components/home/IndustriesServed";
 import ApplicationAreas from "@/components/home/ApplicationAreas";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import CTASection from "@/components/home/CTASection";
+import PartnerCTA from "@/components/home/PartnerCTA";
 import { usePageMeta } from "@/hooks/use-page-meta";
 
 const Index = () => {
@@ -22,13 +22,13 @@ const Index = () => {
       <HeroSection />
       <AboutCompany />
       <ProductCategories />
-      <HotProducts />
+      <WhyChooseUs />
+      <IndustriesServed />
       <ManufacturingProcess />
       <QualitySection />
-      <IndustriesServed />
+      <HotProducts />
       <ApplicationAreas />
-      <WhyChooseUs />
-      <CTASection />
+      <PartnerCTA />
     </SiteLayout>
   );
 };

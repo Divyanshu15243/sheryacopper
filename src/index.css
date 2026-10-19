@@ -12,6 +12,9 @@
     --paper: 43 26% 95%;           /* #F5F3EE */
     --steel: 144 2% 53%;           /* #858A87 */
     --line: 72 7% 85%;             /* #DCDDD8 */
+    --copper-deep: 20 63% 22%;     /* #5C2C15 */
+    --copper-light: 28 72% 62%;    /* #E0995A */
+    --panel: 36 33% 95%;           /* #F7F2EC: soft card surface */
 
     /* shadcn semantic tokens mapped onto the palette */
     --background: 0 0% 100%;
@@ -169,6 +172,71 @@
 
   .corner-marks::after {
     @apply -bottom-px -right-px border-b-2 border-r-2;
+  }
+
+  /* Light editorial system (homepage, header, footer) */
+  .bg-copper-gradient {
+    background-image: linear-gradient(
+      115deg,
+      hsl(var(--copper-deep)) 0%,
+      hsl(var(--copper-dark)) 30%,
+      hsl(var(--copper)) 65%,
+      hsl(var(--copper-light)) 100%
+    );
+  }
+
+  /* Deeper variant for large panels carrying white body text */
+  .bg-copper-gradient-deep {
+    background-image: linear-gradient(
+      115deg,
+      hsl(var(--copper-deep)) 0%,
+      hsl(var(--copper-dark)) 45%,
+      hsl(var(--copper)) 100%
+    );
+  }
+
+  .m-eyebrow {
+    @apply block font-body text-[11px] font-light uppercase tracking-[0.2em] text-steel;
+  }
+
+  .m-h2 {
+    @apply font-body text-[1.875rem] font-light leading-[1.15] tracking-[-0.025em] text-ink sm:text-[2.25rem];
+  }
+
+  .m-h3 {
+    @apply font-body text-lg font-light tracking-[-0.025em] text-ink;
+  }
+
+  .m-lede {
+    @apply font-body text-[15px] font-light leading-[1.75] text-muted-foreground sm:text-base;
+  }
+
+  .m-card {
+    @apply rounded bg-panel;
+  }
+
+  .m-btn {
+    @apply inline-flex min-h-[40px] items-center justify-center gap-2 rounded px-5 font-body text-sm font-medium transition-all duration-200 focus-visible:outline-offset-4;
+  }
+
+  .m-btn-gradient {
+    @apply bg-copper-gradient text-white shadow-[0_12px_28px_-12px_hsl(var(--copper)/0.7)] hover:brightness-110;
+  }
+
+  .m-btn-outline {
+    @apply border border-line bg-white text-ink hover:border-copper hover:text-copper-dark;
+  }
+
+  .m-btn-light {
+    @apply bg-white text-ink hover:bg-white/90;
+  }
+
+  .m-btn-ghost-light {
+    @apply border border-white/40 text-white hover:bg-white/10;
+  }
+
+  .m-tag {
+    @apply inline-flex items-center rounded border px-3 py-1 font-body text-xs font-light;
   }
 
   /* Forms */

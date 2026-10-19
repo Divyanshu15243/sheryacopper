@@ -58,6 +58,7 @@ export default {
         },
         charcoal: "hsl(var(--charcoal))",
         ink: "hsl(var(--ink))",
+        panel: "hsl(var(--panel))",
         paper: "hsl(var(--paper))",
         steel: "hsl(var(--steel))",
         line: "hsl(var(--line))",
@@ -88,6 +89,14 @@ export default {
           "0%": { transform: "scaleX(0)" },
           "100%": { transform: "scaleX(1)" },
         },
+        "ken-burns": {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.08)" },
+        },
+        "word-in": {
+          "0%": { opacity: "0", transform: "translateY(0.6em)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -95,6 +104,8 @@ export default {
         "fade-up": "fade-up 0.5s ease-out forwards",
         "fade-in": "fade-in 0.3s ease-out forwards",
         progress: "progress 6.5s linear forwards",
+        "ken-burns": "ken-burns 20s ease-out infinite alternate",
+        "word-in": "word-in 0.8s cubic-bezier(0.16,1,0.3,1) both",
       },
     },
   },

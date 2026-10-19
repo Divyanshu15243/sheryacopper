@@ -14,11 +14,13 @@ const companyLinks = [
 
 type MenuId = "company" | "products" | null;
 
-const navItemClass = (active: boolean) =>
+const navItemClass = (active: boolean, light = false) =>
   cn(
-    "relative inline-flex h-[var(--header-h)] items-center gap-1 px-3 font-heading text-[14px] font-semibold transition-colors xl:px-4",
-    "after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:origin-left after:bg-copper after:transition-transform xl:after:inset-x-4",
-    active ? "text-ink after:scale-x-100" : "text-ink/75 after:scale-x-0 hover:text-ink",
+    "relative inline-flex h-[var(--header-h)] items-center gap-1 px-3 font-body text-[14px] font-normal transition-colors xl:px-4",
+    "after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:origin-left after:bg-copper after:transition-transform xl:after:inset-x-4",
+    light
+      ? active ? "text-white after:scale-x-100" : "text-white/80 after:scale-x-0 hover:text-white"
+      : active ? "text-ink after:scale-x-100" : "text-ink/70 after:scale-x-0 hover:text-ink",
   );
 
 export default function Header() {
@@ -28,6 +30,17 @@ export default function Header() {
   const [preview, setPreview] = useState(productCategories[0].slug);
   const navRef = useRef<HTMLElement>(null);
   const closeTimer = useRef<number>();
+  const [scrolled, setScrolled] = useState(false);
+
+  // On the homepage the header floats over the full-screen hero until the page scrolls
+  const overlay = pathname === "/";
+  useEffect(() => {
+    if (!overlay) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [overlay]);
 
   // Close menus on navigation
   useEffect(() => {
@@ -80,11 +93,12 @@ export default function Header() {
   const companyActive = companyLinks.some((l) => pathname.startsWith(l.path));
   const productsActive = pathname.startsWith("/products");
   const previewCat = productCategories.find((c) => c.slug === preview) ?? productCategories[0];
+  const light = overlay && !scrolled && !open && !mobileOpen;
 
   return (
     <>
       {/* Utility bar */}
-      <div className="hidden bg-ink text-white/70 lg:block">
+      <div className={cn("hidden bg-ink text-white/70", !overlay && "lg:block")}>
         <div className="container-wide flex h-9 items-center justify-between text-[12.5px]">
           <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
             <span className="text-copper">{company.certification.standard}</span> Certified
@@ -104,13 +118,29 @@ export default function Header() {
         </div>
       </div>
 
-      <header ref={navRef} className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90">
+      <header
+        ref={navRef}
+        className={cn(
+          "top-0 z-50 border-b transition-colors duration-300",
+          overlay ? "fixed inset-x-0" : "sticky",
+          light
+            ? "border-white/15 bg-transparent"
+            : "border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90",
+        )}
+      >
         <div className="container-wide flex h-[var(--header-h)] items-center justify-between gap-4">
           <Link to="/" className="flex min-w-0 items-center gap-3" aria-label="Shreya Coppers home">
             <img src={logo} alt="" width={40} height={44} className="h-11 w-auto" />
             <span className="min-w-0 leading-none">
-              <span className="block font-heading text-[19px] font-extrabold tracking-tight text-ink">Shreya Coppers</span>
-              <span className="mt-1 hidden font-mono text-[10px] uppercase tracking-[0.16em] text-steel min-[400px]:block">
+              <span className={cn("block font-heading text-[19px] font-extrabold tracking-tight transition-colors", light ? "text-white" : "text-ink")}>
+                Shreya Coppers
+              </span>
+              <span
+                className={cn(
+                  "mt-1 hidden font-body text-[10px] font-light uppercase tracking-[0.2em] min-[400px]:block",
+                  light ? "text-white/70" : "text-steel",
+                )}
+              >
                 Copper &amp; Alloy Manufacturers
               </span>
             </span>
@@ -120,7 +150,7 @@ export default function Header() {
           <nav aria-label="Main" className="hidden lg:block">
             <ul className="flex items-center">
               <li>
-                <NavLink to="/" end className={({ isActive }) => navItemClass(isActive)}>
+                <NavLink to="/" end className={({ isActive }) => navItemClass(isActive, light)}>
                   Home
                 </NavLink>
               </li>
@@ -132,7 +162,7 @@ export default function Header() {
                   aria-expanded={open === "company"}
                   aria-controls="menu-company"
                   onClick={() => setOpen(open === "company" ? null : "company")}
-                  className={navItemClass(companyActive)}
+                  className={navItemClass(companyActive, light)}
                 >
                   Company
                   <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open === "company" && "rotate-180")} aria-hidden />
@@ -165,7 +195,7 @@ export default function Header() {
                   aria-expanded={open === "products"}
                   aria-controls="menu-products"
                   onClick={() => setOpen(open === "products" ? null : "products")}
-                  className={navItemClass(productsActive)}
+                  className={navItemClass(productsActive, light)}
                 >
                   Products
                   <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open === "products" && "rotate-180")} aria-hidden />
@@ -217,7 +247,7 @@ export default function Header() {
                 { name: "Contact", path: "/contact" },
               ].map((l) => (
                 <li key={l.path}>
-                  <NavLink to={l.path} className={({ isActive }) => navItemClass(isActive)}>
+                  <NavLink to={l.path} className={({ isActive }) => navItemClass(isActive, light)}>
                     {l.name}
                   </NavLink>
                 </li>
@@ -226,12 +256,15 @@ export default function Header() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <Link to="/contact" className="btn btn-primary hidden min-h-[44px] sm:inline-flex">
+            <Link to="/contact" className={cn("m-btn hidden sm:inline-flex", light ? "m-btn-ghost-light" : "m-btn-gradient")}>
               Request a Quote
             </Link>
             <button
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center text-ink lg:hidden"
+              className={cn(
+                "inline-flex h-11 w-11 items-center justify-center rounded border lg:hidden",
+                light ? "border-white/30 text-white" : "border-line text-ink",
+              )}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -307,7 +340,7 @@ function MobileMenu({ pathname, onNavigate }: { pathname: string; onNavigate: ()
       <Link to="/catalogue" onClick={onNavigate} className={rowClass(pathname === "/catalogue")}>Catalogue</Link>
       <Link to="/contact" onClick={onNavigate} className={rowClass(pathname === "/contact")}>Contact</Link>
 
-      <Link to="/contact" onClick={onNavigate} className="btn btn-primary mt-8 w-full">
+      <Link to="/contact" onClick={onNavigate} className="m-btn m-btn-gradient mt-8 min-h-[48px] w-full">
         Request a Quote <ArrowRight className="h-4 w-4" aria-hidden />
       </Link>
 

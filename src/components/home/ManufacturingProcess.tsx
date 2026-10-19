@@ -1,74 +1,54 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
 import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
-import warehouse from "@/assets/infrastructure/warehouse.jpg";
-import SectionHeader from "@/components/site/SectionHeader";
 import Reveal from "@/components/site/Reveal";
 
-// Each stage is drawn from the About and Infrastructure page copy.
-const stages = [
-  {
-    title: "Raw Material",
-    text: "Only high-grade raw material is used, held in dedicated storage to ensure uninterrupted production.",
-  },
-  {
-    title: "Precision Manufacturing",
-    text: "CNC machines, extrusion presses and drawing machines, supported by an in-house tool room for custom dies.",
-  },
-  {
-    title: "Quality Assurance",
-    text: "In-house testing lab with spectrometers, tensile testers and dimensional instruments.",
-  },
-  {
-    title: "Storage & Dispatch",
-    text: "Well-organized warehouse for efficient inventory management and timely dispatch of orders.",
-  },
-];
-
-const images = [
-  { src: factoryFloor, alt: "Machining line on a manufacturing floor" },
-  { src: qualityLab, alt: "Quality inspection laboratory" },
-  { src: warehouse, alt: "Warehouse with stocked metal tubes" },
-];
+const stages = ["Raw Material Control", "Precision Manufacturing", "Quality Assurance", "Storage & Dispatch"];
 
 export default function ManufacturingProcess() {
   return (
-    <section className="section relative isolate overflow-hidden bg-charcoal text-white" aria-labelledby="process-heading">
-      <div className="tech-grid absolute inset-0 -z-10" aria-hidden />
+    <section className="bg-white py-8 md:py-12" aria-labelledby="process-heading">
       <div className="container-wide">
-        <SectionHeader
-          id="process-heading"
-          dark
-          eyebrow="How We Manufacture"
-          title="From raw material to dispatch"
-          description="Our infrastructure is divided into departments for production, quality assurance, administration, and client help desk."
-          action={
-            <Link to="/infrastructure" className="btn btn-outline-light">
-              Our infrastructure <ArrowRight className="h-4 w-4" aria-hidden />
+        <Reveal className="grid overflow-hidden rounded lg:grid-cols-2">
+          <div className="aspect-[16/10] bg-ink lg:aspect-auto">
+            <img
+              src={qualityLab}
+              alt="Quality inspection laboratory at Shreya Coppers"
+              loading="lazy"
+              width={800}
+              height={600}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="relative isolate overflow-hidden bg-copper-gradient-deep px-6 py-12 text-white sm:px-10 lg:px-12 lg:py-16">
+            {/* Faint structural lines, as on an engineering drawing */}
+            <div className="absolute inset-y-0 left-1/4 -z-10 w-px bg-white/15" aria-hidden />
+            <div className="absolute inset-y-0 right-10 -z-10 w-px bg-white/15" aria-hidden />
+            <div className="absolute inset-x-0 top-10 -z-10 h-px bg-white/15" aria-hidden />
+
+            <span className="m-eyebrow mb-5 text-white/75">Manufacturing Excellence</span>
+            <h2 id="process-heading" className="font-body text-[1.75rem] font-light leading-[1.2] tracking-[-0.02em] text-white sm:text-3xl">
+              Where Technology
+              <br />
+              Meets Metallurgy
+            </h2>
+            <p className="mt-5 max-w-md font-body text-[14px] font-light leading-[1.8] text-white/90">
+              CNC machines, extrusion presses and drawing machines — supported by an in-house tool room and a testing lab
+              with spectrometers, tensile testers and dimensional instruments — ensure every batch meets international
+              standards before dispatch.
+            </p>
+            <ul className="mt-7 flex flex-wrap gap-2">
+              {stages.map((s) => (
+                <li key={s} className="m-tag border-white/35 text-white">
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <Link to="/infrastructure" className="m-btn m-btn-ghost-light mt-8 min-h-[36px] px-4 text-[13px]">
+              Our Infrastructure <ArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
-          }
-        />
-
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          {images.map((img, i) => (
-            <Reveal key={img.alt} delay={i * 0.06} className="aspect-[4/3] overflow-hidden bg-ink sm:aspect-[16/10]">
-              <img src={img.src} alt={img.alt} loading="lazy" width={640} height={512} className="h-full w-full object-cover opacity-90" />
-            </Reveal>
-          ))}
-        </div>
-
-        <ol className="relative mt-12 grid gap-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-8 lg:before:absolute lg:before:inset-x-0 lg:before:top-[19px] lg:before:h-px lg:before:bg-white/15 lg:before:content-['']">
-          {stages.map((s, i) => (
-            <Reveal as="li" key={s.title} delay={i * 0.06} className="relative">
-              <span className="relative flex h-10 w-10 items-center justify-center border border-copper bg-charcoal font-mono text-[13px] font-medium text-copper">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-6 text-xl font-bold text-white">{s.title}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-white/65">{s.text}</p>
-            </Reveal>
-          ))}
-        </ol>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

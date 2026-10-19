@@ -4,74 +4,59 @@ import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
 import Reveal from "@/components/site/Reveal";
 import { company } from "@/data/company";
 
-const glance = [
-  { term: "Established", detail: `${company.established}, Gujarat, India` },
-  { term: "Materials", detail: "Copper, Copper Alloy, Titanium and Brass" },
-  { term: "Manufacturing Base", detail: company.address.lines.slice(0, 2).join(", ") },
-  { term: "Certified Scope", detail: `${company.certification.standard} — ${company.certification.scope}` },
-];
-
-// Two short facts side by side, then the longer ones full width
-const glanceCellClass = ["", "border-t sm:border-l sm:border-t-0", "border-t sm:col-span-2", "border-t sm:col-span-2"];
-
 export default function AboutCompany() {
   return (
-    <section className="section bg-white" aria-labelledby="about-heading">
-      <div className="container-wide grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="lg:col-span-5">
-          <p className="eyebrow mb-4">About the Company</p>
-          <h2 id="about-heading" className="h-section text-balance">
-            Welcome to Shreya Coppers
+    <section className="bg-white py-20 md:py-28" aria-labelledby="about-heading">
+      {/* Intro split */}
+      <div className="container-wide grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <Reveal>
+          <span className="m-eyebrow mb-5">
+            Established {company.established} · Gujarat, India
+          </span>
+          <h2 id="about-heading" className="m-h2 lg:text-[2.6rem]">
+            A Legacy in Copper
+            <br />
+            &amp; Alloy Manufacturing
           </h2>
-          <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.14em] text-steel">
-            Tube Manufacturers · Copper Alloy
-          </p>
-          <div className="prose-body mt-8 text-[16px]">
-            <p>
-              Established in the year 1974, Shreya Coppers is counted as one of the leading manufacturers, exporters, and
-              suppliers of Industrial Products like Pipes, Tubes, Capillary pipes &amp; Tubes, Flanges, Pipe fittings of
-              metals like Copper, Copper Alloy, Titanium, and Brass.
-            </p>
-            <p>
-              With rich industrial experience and powerful manufacturing setup, we are producing quality copper products. Our
-              committed and qualified team works relentlessly to provide the best manufacturing and innovative customer
-              experience possible.
-            </p>
-          </div>
-
-          <div className="mt-10 flex items-end gap-5 border-t border-line pt-8">
-            <span className="font-heading text-6xl font-extrabold leading-none tracking-tight text-copper">50+</span>
-            <span className="pb-1 text-[15px] font-medium leading-snug text-ink">
-              Years of copper &amp; alloy
-              <br />
-              manufacturing experience
-            </span>
-          </div>
-
-          <Link to="/about" className="link-arrow mt-10">
-            More about our company <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
+          <span className="mt-8 block h-px w-12 bg-copper-gradient" aria-hidden />
         </Reveal>
+        <Reveal delay={0.08}>
+          <p className="m-lede lg:pt-6 lg:text-[17px]">
+            Shreya Coppers is one of India&apos;s leading manufacturers, exporters and suppliers of pipes, tubes, capillary
+            tubes, flanges and pipe fittings in copper, copper alloy, titanium and brass — delivering consistency,
+            precision and trust to industries worldwide for over five decades.
+          </p>
+        </Reveal>
+      </div>
 
-        <Reveal delay={0.1} className="lg:col-span-7">
-          <div className="aspect-[16/10] overflow-hidden bg-paper">
-            <img
-              src={factoryFloor}
-              alt="Tube processing machinery on a manufacturing floor with copper tubes in the foreground"
-              loading="lazy"
-              width={640}
-              height={512}
-              className="h-full w-full object-cover"
-            />
+      {/* Dark image card */}
+      <div className="container-wide mt-16 md:mt-24">
+        <Reveal className="relative isolate overflow-hidden rounded bg-ink">
+          <img
+            src={factoryFloor}
+            alt="Tube processing machinery on the Shreya Coppers manufacturing floor"
+            loading="lazy"
+            width={1600}
+            height={900}
+            className="absolute inset-0 -z-20 h-full w-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink via-ink/85 to-ink/10" aria-hidden />
+          <div className="max-w-xl px-6 py-14 sm:px-10 md:py-20 lg:px-14">
+            <span className="m-eyebrow mb-5 text-white/60">About Us</span>
+            <h3 className="font-body text-[1.75rem] font-light leading-[1.2] tracking-[-0.02em] text-white sm:text-4xl">
+              Five Decades of Expertise.
+              <br />
+              One Standard — Quality.
+            </h3>
+            <p className="mt-6 font-body text-[14px] font-light leading-[1.8] text-white/80">
+              With rich industrial experience and a powerful manufacturing setup, our committed and qualified team works
+              relentlessly to deliver quality copper products. We operate an {company.certification.standard} certified
+              quality management system across the manufacture of copper, copper alloys, brass and cupro-nickel products.
+            </p>
+            <Link to="/about" className="m-btn m-btn-light mt-8">
+              Our Story <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
           </div>
-          <dl className="mt-0 grid border-x border-b border-line sm:grid-cols-2">
-            {glance.map((g, i) => (
-              <div key={g.term} className={`border-line p-6 ${glanceCellClass[i]}`}>
-                <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-copper-dark">{g.term}</dt>
-                <dd className="mt-2 text-[15px] leading-relaxed text-ink">{g.detail}</dd>
-              </div>
-            ))}
-          </dl>
         </Reveal>
       </div>
     </section>
