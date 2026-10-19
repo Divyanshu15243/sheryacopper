@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
+import qualityLab from "@/assets/stock/quality-inspection.jpg";
 import Reveal from "@/components/site/Reveal";
 
 const stages = ["Raw Material Control", "Precision Manufacturing", "Quality Assurance", "Storage & Dispatch"];
@@ -13,7 +13,7 @@ export default function ManufacturingProcess() {
           <div className="aspect-[16/10] bg-ink lg:aspect-auto">
             <img
               src={qualityLab}
-              alt="Quality inspection laboratory at Shreya Coppers"
+              alt="Digital caliper measuring a metal section during quality inspection"
               loading="lazy"
               width={800}
               height={600}

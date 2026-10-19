@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
+import factoryFloor from "@/assets/stock/production-hall.jpg";
 import Reveal from "@/components/site/Reveal";
 import { company } from "@/data/company";
 
@@ -34,7 +34,7 @@ export default function AboutCompany() {
         <Reveal className="relative isolate overflow-hidden rounded bg-ink">
           <img
             src={factoryFloor}
-            alt="Tube processing machinery on the Shreya Coppers manufacturing floor"
+            alt="Wide industrial production hall with overhead cranes"
             loading="lazy"
             width={1600}
             height={900}

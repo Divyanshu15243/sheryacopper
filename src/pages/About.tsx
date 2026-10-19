@@ -7,8 +7,8 @@ import Reveal from "@/components/site/Reveal";
 import SectionHeader from "@/components/site/SectionHeader";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import { company } from "@/data/company";
-import heroBg from "@/assets/hero-bg.jpg";
-import warehouseImg from "@/assets/infrastructure/warehouse.jpg";
+import heroBg from "@/assets/stock/warehouse-racks.jpg";
+import warehouseImg from "@/assets/stock/tube-racks.jpg";
 import certificate1 from "@/assets/shrey-certificate-1024x1024.png";
 import certificate2 from "@/assets/certificate2-1024x1024.png";
 
@@ -62,7 +62,7 @@ export default function About() {
         title="About Us"
         subtitle="Five decades of excellence in copper and alloy manufacturing"
         image={heroBg}
-        imageAlt="Copper tubes on a production line"
+        imageAlt="Long racks of metal tubes in an industrial warehouse"
       />
 
       {/* Introduction */}
@@ -114,7 +114,7 @@ export default function About() {
             <div className="aspect-[5/4] overflow-hidden bg-charcoal">
               <img
                 src={warehouseImg}
-                alt="Stock of copper and metal tubes in a warehouse"
+                alt="Metal tubes stored on labelled warehouse racks"
                 loading="lazy"
                 width={640}
                 height={512}

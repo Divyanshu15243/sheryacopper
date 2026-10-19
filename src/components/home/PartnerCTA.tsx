@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone } from "lucide-react";
-import warehouse from "@/assets/infrastructure/warehouse.jpg";
+import warehouse from "@/assets/stock/pipe-warehouse.jpg";
 import Reveal from "@/components/site/Reveal";
 import { company } from "@/data/company";
 
@@ -12,7 +12,7 @@ export default function PartnerCTA() {
           <div className="aspect-[16/10] bg-ink lg:aspect-auto">
             <img
               src={warehouse}
-              alt="Warehouse stocked with finished metal tubes ready for dispatch"
+              alt="Warehouse stacked with metal pipes ready for dispatch"
               loading="lazy"
               width={800}
               height={600}

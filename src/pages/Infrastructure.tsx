@@ -6,10 +6,11 @@ import Reveal from "@/components/site/Reveal";
 import SectionHeader from "@/components/site/SectionHeader";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import { cn } from "@/lib/utils";
-import factoryFloor from "@/assets/infrastructure/factory-floor.jpg";
-import qualityLab from "@/assets/infrastructure/quality-lab.jpg";
-import warehouseImg from "@/assets/infrastructure/warehouse.jpg";
-import heroBg from "@/assets/hero-bg.jpg";
+import factoryFloor from "@/assets/stock/cnc-machining.jpg";
+import productionHall from "@/assets/stock/production-hall.jpg";
+import qualityLab from "@/assets/stock/quality-inspection.jpg";
+import warehouseImg from "@/assets/stock/pipe-warehouse.jpg";
+import pipeHandling from "@/assets/stock/pipe-handling.jpg";
 
 const facilities = [
   {
@@ -29,7 +30,7 @@ const facilities = [
     description: "Well-organized warehouse facility for efficient inventory management and timely dispatch of orders.",
   },
   {
-    image: heroBg,
+    image: pipeHandling,
     title: "Main Production Unit",
     description: "Our primary manufacturing facility at GIDC Umbergaon, spread across a large industrial area.",
   },
@@ -58,8 +59,8 @@ export default function Infrastructure() {
         eyebrow="Facilities & Capabilities"
         title="Infrastructure"
         subtitle="Advanced manufacturing facilities powering precision metal products"
-        image={factoryFloor}
-        imageAlt="Machining line on a manufacturing floor"
+        image={productionHall}
+        imageAlt="Wide industrial production hall with overhead cranes"
       />
 
       {/* Intro */}
