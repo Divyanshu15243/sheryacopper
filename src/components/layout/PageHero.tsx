@@ -16,6 +16,8 @@ interface PageHeroProps {
   image?: string;
   imageAlt?: string;
   imageFit?: "cover" | "contain";
+  /** Full-width photo behind the banner instead of the framed image on the right */
+  bannerImage?: string;
   children?: ReactNode;
 }
 
@@ -27,17 +29,41 @@ export default function PageHero({
   image,
   imageAlt = "",
   imageFit = "cover",
+  bannerImage,
   children,
 }: PageHeroProps) {
   const crumbs: Crumb[] = [{ label: "Home", to: "/" }, ...breadcrumbs, { label: title }];
+  const framedImage = bannerImage ? undefined : image;
 
   return (
     <section className="relative isolate overflow-hidden bg-ink text-white">
-      <div className="tech-grid absolute inset-0 -z-10" aria-hidden />
-      <div className="absolute -right-40 -top-40 -z-10 h-96 w-96 rounded-full bg-copper/10 blur-3xl" aria-hidden />
+      {bannerImage ? (
+        <>
+          <img
+            src={bannerImage}
+            alt={imageAlt}
+            width={1600}
+            height={900}
+            className="absolute inset-0 -z-20 h-full w-full object-cover motion-safe:animate-ken-burns"
+          />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/20" aria-hidden />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/70 via-transparent to-ink/30" aria-hidden />
+        </>
+      ) : (
+        <>
+          <div className="tech-grid absolute inset-0 -z-10" aria-hidden />
+          <div className="absolute -right-40 -top-40 -z-10 h-96 w-96 rounded-full bg-copper/10 blur-3xl" aria-hidden />
+        </>
+      )}
 
-      <div className={cn("container-wide grid gap-10 py-12 md:py-16", image && "lg:grid-cols-12 lg:items-center lg:py-20")}>
-        <div className={cn(image ? "lg:col-span-7" : "max-w-3xl")}>
+      <div
+        className={cn(
+          "container-wide grid gap-10 py-12 md:py-16",
+          framedImage && "lg:grid-cols-12 lg:items-center lg:py-20",
+          bannerImage && "min-h-[380px] content-end pb-14 pt-24 md:min-h-[460px] md:pb-20 lg:min-h-[520px]",
+        )}
+      >
+        <div className={cn(framedImage ? "lg:col-span-7" : "max-w-3xl")}>
           <nav aria-label="Breadcrumb" className="mb-8">
             <ol className="flex flex-wrap items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-white/50">
               {crumbs.map((c, i) => (
@@ -65,11 +91,11 @@ export default function PageHero({
           {children && <div className="mt-8">{children}</div>}
         </div>
 
-        {image && (
+        {framedImage && (
           <div className="hidden lg:col-span-5 lg:block">
             <div className={cn("corner-marks aspect-[4/3] overflow-hidden", imageFit === "contain" ? "bg-white" : "bg-charcoal")}>
               <img
-                src={image}
+                src={framedImage}
                 alt={imageAlt}
                 className={cn("h-full w-full", imageFit === "contain" ? "object-contain p-4" : "object-cover")}
               />

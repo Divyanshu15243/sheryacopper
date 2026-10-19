@@ -61,7 +61,7 @@ export default function About() {
         eyebrow="Company Profile"
         title="About Us"
         subtitle="Five decades of excellence in copper and alloy manufacturing"
-        image={heroBg}
+        bannerImage={heroBg}
         imageAlt="Long racks of metal tubes in an industrial warehouse"
       />
 

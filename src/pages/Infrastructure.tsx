@@ -59,7 +59,7 @@ export default function Infrastructure() {
         eyebrow="Facilities & Capabilities"
         title="Infrastructure"
         subtitle="Advanced manufacturing facilities powering precision metal products"
-        image={productionHall}
+        bannerImage={productionHall}
         imageAlt="Wide industrial production hall with overhead cranes"
       />
 
