@@ -40,7 +40,7 @@ export default function ProductCategory() {
         title={category.title}
         subtitle={category.shortDesc}
         breadcrumbs={[{ label: "Products", to: "/products" }]}
-        image={categoryImage(category)}
+        image={categoryImage(category)} imageFit="contain"
         imageAlt={category.title}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -109,7 +109,7 @@ export default function ProductCategory() {
                   to={`/products/${category.slug}/${p.slug}`}
                   className="group flex h-full flex-col border border-line bg-white transition-colors hover:border-copper"
                 >
-                  <div className="aspect-[4/3] overflow-hidden border-b border-line bg-paper">
+                  <div className="aspect-square overflow-hidden border-b border-line bg-paper">
                     {p.image && (
                       <img
                         src={p.image}

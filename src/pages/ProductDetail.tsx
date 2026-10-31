@@ -60,7 +60,7 @@ export default function ProductDetail() {
           { label: "Products", to: "/products" },
           { label: category.title, to: `/products/${category.slug}` },
         ]}
-        image={product.image}
+        image={product.image} imageFit="contain"
         imageAlt={product.name}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
