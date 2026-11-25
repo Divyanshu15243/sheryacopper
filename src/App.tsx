@@ -14,7 +14,6 @@ import Awards from "./pages/Awards";
 import Gallery from "./pages/Gallery";
 import Catalogue from "./pages/Catalogue";
 import Infrastructure from "./pages/Infrastructure";
-import TestProduct from "./pages/TestProduct";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,7 +36,6 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/catalogue" element={<Catalogue />} />
           <Route path="/infrastructure" element={<Infrastructure />} />
-          <Route path="/test-product" element={<TestProduct />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

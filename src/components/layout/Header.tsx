@@ -242,7 +242,6 @@ export default function Header() {
               </li>
 
               {[
-                { name: "Test Product", path: "/test-product" },
                 { name: "Gallery", path: "/gallery" },
                 { name: "Catalogue", path: "/catalogue" },
                 { name: "Contact", path: "/contact" },
@@ -337,7 +336,6 @@ function MobileMenu({ pathname, onNavigate }: { pathname: string; onNavigate: ()
         {subLink("/products", "All Products")}
         {productCategories.map((c) => subLink(`/products/${c.slug}`, c.title))}
       </Group>
-      <Link to="/test-product" onClick={onNavigate} className={rowClass(pathname === "/test-product")}>Test Product</Link>
       <Link to="/gallery" onClick={onNavigate} className={rowClass(pathname === "/gallery")}>Gallery</Link>
       <Link to="/catalogue" onClick={onNavigate} className={rowClass(pathname === "/catalogue")}>Catalogue</Link>
       <Link to="/contact" onClick={onNavigate} className={rowClass(pathname === "/contact")}>Contact</Link>
