@@ -5,6 +5,8 @@ import PageHero from "@/components/layout/PageHero";
 import CTASection from "@/components/home/CTASection";
 import Reveal from "@/components/site/Reveal";
 import { categoryMap, findProduct } from "@/data/products";
+import { getScaleConfig } from "@/data/productScale";
+import SpecScalePreview from "@/components/product/SpecScalePreview";
 import { company } from "@/data/company";
 import { usePageMeta } from "@/hooks/use-page-meta";
 
@@ -44,6 +46,7 @@ export default function ProductDetail() {
 
   const paragraphs = (product.description ?? "").split("\n\n").filter(Boolean);
   const specifications = product.specifications ?? [];
+  const scale = getScaleConfig(product);
   const features = product.features ?? [];
   const applications = product.applications ?? [];
   const related = category.products.filter((p) => p.slug !== product.slug).slice(0, 4);
@@ -67,9 +70,9 @@ export default function ProductDetail() {
           <Link to={quoteLink} className="btn btn-primary">
             <Send className="h-4 w-4" aria-hidden /> Request Quote
           </Link>
-          {specifications.length > 0 && (
-            <a href="#specifications" className="btn btn-outline-light">
-              View Specifications
+          {(scale || specifications.length > 0) && (
+            <a href={scale ? "#size-range" : "#specifications"} className="btn btn-outline-light">
+              {scale ? "View Size Range" : "View Specifications"}
             </a>
           )}
         </div>
@@ -194,6 +197,16 @@ export default function ProductDetail() {
           </aside>
         </div>
       </section>
+
+      {scale && (
+        <section id="size-range" className="section scroll-mt-24 border-t border-line bg-paper">
+          <div className="container-wide">
+            <Reveal>
+              <SpecScalePreview key={product.slug} config={scale} title={`${product.name} — Size Range`} />
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="section border-t border-line bg-paper">

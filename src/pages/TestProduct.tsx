@@ -7,8 +7,19 @@ import CTASection from "@/components/home/CTASection";
 import Reveal from "@/components/site/Reveal";
 import SpecScalePreview from "@/components/product/SpecScalePreview";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { getScaleConfig } from "@/data/productScale";
 import { cn } from "@/lib/utils";
 import tubeRacks from "@/assets/stock/tube-racks.jpg";
+
+const scaleConfig = getScaleConfig({
+  name: "Straight Copper Tube",
+  slug: "copper-tubes",
+  specifications: [
+    { label: "Outer Diameter", value: "6mm to 130mm" },
+    { label: "Wall Thickness", value: "0.70mm to 3.25mm" },
+    { label: "Length", value: "300mm to 6000mm" },
+  ],
+})!;
 
 const materialTags = ["C12200 DHP", "Cu ≥ 99.90%", "P: 0.015–0.040%", "Seamless · Cold Drawn"];
 
@@ -126,9 +137,9 @@ export default function TestProduct() {
       </section>
 
       {/* Specifications with scale preview */}
-      <section className="bg-paper px-4 py-12 sm:px-6 md:py-16" aria-label="Specifications">
-        <Reveal className="mx-auto max-w-7xl">
-          <SpecScalePreview />
+      <section className="bg-paper py-12 md:py-16" aria-label="Specifications">
+        <Reveal className="container-wide">
+          <SpecScalePreview config={scaleConfig} title="By the Numbers" eyebrow="Specifications" />
         </Reveal>
       </section>
 
